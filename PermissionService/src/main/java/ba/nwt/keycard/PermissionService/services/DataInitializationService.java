@@ -1,3 +1,13 @@
+package ba.nwt.keycard.PermissionService.services;
+
+
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ba.nwt.keycard.PermissionService.models.*;
+import ba.nwt.keycard.PermissionService.repositories.*;
+import javax.management.relation.Role;
+
 @Service
 @Transactional
 public class DataInitializationService {

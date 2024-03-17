@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
+@Table(name = "floors")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +17,7 @@ public class Floor {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
+    private Integer floorNumber;
     @ManyToOne
     private Building building;
     @OneToMany(mappedBy = "floor")
