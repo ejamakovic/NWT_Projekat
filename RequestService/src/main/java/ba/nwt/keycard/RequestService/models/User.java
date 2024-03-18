@@ -10,7 +10,7 @@ import org.intellij.lang.annotations.Pattern;
 import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,14 +28,16 @@ public class User {
     private String role;
     private Long teamId;
     private Long keyId;
+    private Boolean active;
     @OneToMany(mappedBy = "user")
     private List<Request> requests;
     @OneToMany(mappedBy = "user")
     private List<Log> logs;
     @OneToMany(mappedBy = "user")
     private List<Notification> notifications;
-
-
-
+    @OneToOne(mappedBy = "user")
+    private Keycard keycard;
+    @OneToOne(mappedBy = "user")
+    private Team team;
 
 }
