@@ -24,6 +24,7 @@ public class User {
     private String email;
     @NotNull
     private String passwordHash;
+    @NotNull
     private String role;
     private Long teamId;
     private Long keyId;

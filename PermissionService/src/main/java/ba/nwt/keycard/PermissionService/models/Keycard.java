@@ -1,4 +1,7 @@
+package ba.nwt.keycard.PermissionService.models;
+
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Log {
+public class Keycard {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

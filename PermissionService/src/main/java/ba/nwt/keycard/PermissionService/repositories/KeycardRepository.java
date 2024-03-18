@@ -1,3 +1,6 @@
+package ba.nwt.keycard.PermissionService.repositories;
+
+import ba.nwt.keycard.PermissionService.models.Keycard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
