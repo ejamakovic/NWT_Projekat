@@ -6,4 +6,7 @@ import ba.nwt.keycard.PermissionService.models.Permission;
 
 @Repository
 public interface PermissionRepository extends JpaRepository<Permission, Integer> {
+
+    // Define a method to save a Permission entity
+    Permission save(Permission permission);
 }
