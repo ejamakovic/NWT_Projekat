@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "keycards")
@@ -18,11 +19,8 @@ public class Keycard {
     private Integer id;
 
     @Column(name = "is_active")
+    @JsonProperty("active")
     private Boolean isActive;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "access_level")
-    private AccessLevel accessLevel;
 
     public void setActive(Boolean isActive) {
         this.isActive = isActive;
