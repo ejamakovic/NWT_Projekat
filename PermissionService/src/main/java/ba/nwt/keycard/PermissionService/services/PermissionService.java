@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ba.nwt.keycard.PermissionService.models.Permission;
 import ba.nwt.keycard.PermissionService.models.Keycard;
 import ba.nwt.keycard.PermissionService.models.PermissionKeycard;
+import ba.nwt.keycard.PermissionService.models.Role;
 
 @Service
 public class PermissionService {

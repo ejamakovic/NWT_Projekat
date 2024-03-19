@@ -3,6 +3,7 @@ package ba.nwt.keycard.PermissionService.models;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import java.util.UUID;
 import lombok.NoArgsConstructor;
 
 @Entity

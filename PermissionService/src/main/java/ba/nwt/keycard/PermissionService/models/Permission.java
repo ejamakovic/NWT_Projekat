@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.management.relation.Role;
+import ba.nwt.keycard.PermissionService.models.Role;
 
 @Entity
 @Table(name = "permissions")
@@ -14,7 +13,7 @@ import javax.management.relation.Role;
 @AllArgsConstructor
 public class Permission {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
