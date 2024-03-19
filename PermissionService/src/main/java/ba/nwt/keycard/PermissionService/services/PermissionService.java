@@ -1,11 +1,11 @@
+package ba.nwt.keycard.PermissionService.services;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ba.nwt.keycard.PermissionService.models.Permission;
 import ba.nwt.keycard.PermissionService.models.Role;
 import ba.nwt.keycard.PermissionService.repositories.PermissionRepository;
-
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 @Service
 public class PermissionService {

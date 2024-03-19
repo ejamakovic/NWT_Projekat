@@ -1,7 +1,6 @@
 package ba.nwt.keycard.PermissionService.models;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
