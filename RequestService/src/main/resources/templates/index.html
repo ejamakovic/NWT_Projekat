@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Spring Boot App</title>
+</head>
+
+<body>
+    <h1>Welcome to My Spring Boot App! Request Service</h1>
+
+    <!-- Thymeleaf expression to display dynamic content -->
+    <p th:text="${message}"></p>
+
+    <!-- Thymeleaf link URL -->
+    <a th:href="@{/login}">Login</a>
+</body>
+
+</html>
