@@ -14,9 +14,10 @@ import org.intellij.lang.annotations.Pattern;
 @AllArgsConstructor
 public class Keycard {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
     private String name;
-    private Long manager_id;
+    @OneToOne
+    private User user;
 }
