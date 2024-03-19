@@ -23,4 +23,8 @@ public class Keycard {
     @Enumerated(EnumType.STRING)
     @Column(name = "access_level")
     private AccessLevel accessLevel;
+
+    public void setActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
 }
