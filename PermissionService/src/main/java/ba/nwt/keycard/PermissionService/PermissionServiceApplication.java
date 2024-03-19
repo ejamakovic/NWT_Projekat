@@ -7,7 +7,6 @@ import org.springframework.boot.CommandLineRunner;
 import ba.nwt.keycard.PermissionService.models.*;
 import ba.nwt.keycard.PermissionService.repositories.*;
 
-
 @SpringBootApplication
 public class PermissionServiceApplication implements CommandLineRunner{
 
