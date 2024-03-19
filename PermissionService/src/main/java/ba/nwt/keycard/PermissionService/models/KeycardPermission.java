@@ -7,11 +7,11 @@ import java.util.UUID;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "permissions_keycards")
+@Table(name = "keycards_permissions")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PermissionKeycard {
+public class KeycardPermission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
