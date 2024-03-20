@@ -29,6 +29,9 @@ public class RequestServiceApplication implements CommandLineRunner {
 		user.setPasswordHash(UserUtil.hashPassword("ovoono"));
 		user.setUsername("ejamakovic");
 		user.setEmail("ejamakovic1@etf.unsa.ba");
+		user.setKeyId(1L);
+		user.setActive(true);
+		user.setTeamId(1L);
 		initalizeService.saveUser(user);
 
 		Request request = new Request();
