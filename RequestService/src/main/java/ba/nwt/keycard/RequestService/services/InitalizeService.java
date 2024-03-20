@@ -20,6 +20,12 @@ public class InitalizeService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private KeycardRepository keycardRepository;
+
     public void saveUser(User user){
         userRepository.save(user);
     }
@@ -32,4 +38,7 @@ public class InitalizeService {
     public void saveNotification(Notification notification){
         notificationRepository.save(notification);
     }
+
+    public void saveTeam(Team team){ teamRepository.save(team);}
+    public void saveKeycard(Keycard keycard){ keycardRepository.save(keycard);}
 }

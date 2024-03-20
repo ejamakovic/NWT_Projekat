@@ -1,5 +1,6 @@
 package ba.nwt.keycard.RequestService.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +17,11 @@ public class Keycard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    private String name;
-    @OneToOne
+
+    @Column(name = "is_active")
+    @JsonProperty("active")
+    private Boolean isActive;
+
+    @OneToOne(mappedBy = "keycard")
     private User user;
 }

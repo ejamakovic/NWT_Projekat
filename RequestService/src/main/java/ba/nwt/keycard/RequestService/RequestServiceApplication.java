@@ -24,15 +24,24 @@ public class RequestServiceApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
+		Keycard keycard = new Keycard();
+		keycard.setIsActive(true);
+		initalizeService.saveKeycard(keycard);
+
 		User user = new User();
 		user.setRole("Admin");
 		user.setPasswordHash(UserUtil.hashPassword("ovoono"));
 		user.setUsername("ejamakovic");
 		user.setEmail("ejamakovic1@etf.unsa.ba");
-		user.setKeyId(1L);
 		user.setActive(true);
-		user.setTeamId(1L);
+		user.setKeycard(keycard);
 		initalizeService.saveUser(user);
+
+		Team team = new Team();
+		team.setName("Laganini");
+		team.setUser(user);
+		initalizeService.saveTeam(team);
+
 
 		Request request = new Request();
 		request.setUser(user);

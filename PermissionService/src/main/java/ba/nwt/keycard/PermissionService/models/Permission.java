@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ba.nwt.keycard.PermissionService.models.Role;
 
+import java.util.List;
+
 @Entity
 @Table(name = "permissions")
 @Data
@@ -29,4 +31,8 @@ public class Permission {
 
     @Column(name = "building_id")
     private Integer buildingId;
+
+    @OneToMany(mappedBy = "permission")
+    private List<KeycardPermission> keycardPermission;
+
 }

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.intellij.lang.annotations.Pattern;
+
 
 import java.util.List;
 
@@ -26,8 +26,6 @@ public class User {
     private String passwordHash;
     @NotNull
     private String role;
-    private Long teamId;
-    private Long keyId;
     private Boolean active;
     @OneToMany(mappedBy = "user")
     private List<Request> requests;
@@ -35,7 +33,7 @@ public class User {
     private List<Log> logs;
     @OneToMany(mappedBy = "user")
     private List<Notification> notifications;
-    @OneToOne(mappedBy = "user")
+    @OneToOne
     private Keycard keycard;
     @OneToOne(mappedBy = "user")
     private Team team;

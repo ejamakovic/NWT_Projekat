@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 @Entity
 @Table(name = "keycards")
 @Data
@@ -20,6 +22,10 @@ public class Keycard {
     @Column(name = "is_active")
     @JsonProperty("active")
     private Boolean isActive;
+
+
+    @OneToMany(mappedBy = "keycard")
+    private List<KeycardPermission> keycardPermission;
 
     public void setActive(Boolean isActive) {
         this.isActive = isActive;
