@@ -1,6 +1,8 @@
 package ba.nwt.keycard.RequestService;
 
 import ba.nwt.keycard.RequestService.services.InitalizeService;
+import ba.nwt.keycard.RequestService.utils.UserUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -24,7 +26,7 @@ public class RequestServiceApplication implements CommandLineRunner {
 
 		User user = new User();
 		user.setRole("Admin");
-		user.setPasswordHash("ovoono");
+		user.setPasswordHash(UserUtil.hashPassword("ovoono"));
 		user.setUsername("ejamakovic");
 		user.setEmail("ejamakovic1@etf.unsa.ba");
 		initalizeService.saveUser(user);
@@ -44,7 +46,6 @@ public class RequestServiceApplication implements CommandLineRunner {
 		log.setDescription("Sace iftar");
 		log.setEntryType("Nesto");
 		initalizeService.saveLog(log);
-
 
 	}
 }
