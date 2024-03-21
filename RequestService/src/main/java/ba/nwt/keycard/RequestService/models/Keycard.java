@@ -1,5 +1,7 @@
 package ba.nwt.keycard.RequestService.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,5 +25,15 @@ public class Keycard {
     private Boolean isActive;
 
     @OneToOne(mappedBy = "keycard")
+    @JsonBackReference
     private User user;
+
+    public Keycard(Boolean b) {
+        isActive = b;
+    }
+
+    public Keycard(Boolean b, User user1) {
+        isActive = b;
+        user = user1;
+    }
 }
