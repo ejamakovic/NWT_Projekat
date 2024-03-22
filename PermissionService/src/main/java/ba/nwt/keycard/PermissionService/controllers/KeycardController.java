@@ -65,5 +65,4 @@ public class KeycardController {
         Keycard savedKeycard = keycardService.createKeycard(keycard);
         return ResponseEntity.ok().body(savedKeycard);
     }
-
 }
