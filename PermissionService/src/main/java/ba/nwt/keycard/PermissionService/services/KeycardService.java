@@ -5,6 +5,8 @@ import ba.nwt.keycard.PermissionService.repositories.KeycardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class KeycardService {
 
@@ -15,14 +17,27 @@ public class KeycardService {
         this.keycardRepository = keycardRepository;
     }
 
-    public void initializeKeycards() {
-        // Add some sample keycards to the database
-        Keycard keycard1 = new Keycard();
-        keycard1.setIsActive(true);
-        keycardRepository.save(keycard1);
+    public List<Keycard> getAllKeycards() {
+        return keycardRepository.findAll();
+    }
 
-        Keycard keycard2 = new Keycard();
-        keycard2.setIsActive(true);
-        keycardRepository.save(keycard2);
+    public Keycard getKeycardById(Integer id) {
+        return keycardRepository.findById(id).orElse(null);
+    }
+
+    public void updateActiveStatus(Integer id, Boolean active) {
+        Keycard keycard = keycardRepository.findById(id).orElse(null);
+        if (keycard != null) {
+            keycard.setActive(active);
+            keycardRepository.save(keycard);
+        }
+    }
+
+    public void deleteKeycard(Integer id) {
+        keycardRepository.deleteById(id);
+    }
+
+    public Keycard createKeycard(Keycard keycard) {
+        return keycardRepository.save(keycard);
     }
 }

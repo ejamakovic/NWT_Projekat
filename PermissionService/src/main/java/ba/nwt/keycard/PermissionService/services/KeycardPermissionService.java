@@ -7,11 +7,14 @@ import ba.nwt.keycard.PermissionService.models.Keycard;
 import ba.nwt.keycard.PermissionService.models.Permission;
 import ba.nwt.keycard.PermissionService.repositories.KeycardPermissionRepository;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class KeycardPermissionService {
 
     private final KeycardPermissionRepository keycardPermissionRepository;
+    private static final Logger LOGGER = Logger.getLogger(KeycardPermissionService.class.getName());
 
     @Autowired
     public KeycardPermissionService(KeycardPermissionRepository keycardPermissionRepository) {
@@ -19,14 +22,19 @@ public class KeycardPermissionService {
     }
 
     public List<KeycardPermission> getAllKeycardPermissions() {
+        LOGGER.info("Fetching all keycard permissions");
         return keycardPermissionRepository.findAll();
     }
 
-    public List<Permission> getPermissionsForKeycard(Integer keycardId) {
-        return keycardPermissionRepository.findPermissionsByKeycardId(keycardId);
+    public List<Permission> getPermissionsByKeycardId(Integer keycardId) {
+        return keycardPermissionRepository.findByKeycardId(keycardId).stream()
+                .map(KeycardPermission::getPermission)
+                .collect(Collectors.toList());
     }
 
-    public List<Keycard> getKeycardsForPermission(Integer permissionId) {
-        return keycardPermissionRepository.findKeycardsByPermissionId(permissionId);
+    public List<Keycard> getKeycardsByPermissionId(Integer permissionId) {
+        return keycardPermissionRepository.findByPermissionId(permissionId).stream()
+                .map(KeycardPermission::getKeycard)
+                .collect(Collectors.toList());
     }
 }

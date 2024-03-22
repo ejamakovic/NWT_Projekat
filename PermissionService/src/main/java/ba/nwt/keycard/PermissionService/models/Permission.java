@@ -1,10 +1,10 @@
 package ba.nwt.keycard.PermissionService.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ba.nwt.keycard.PermissionService.models.Role;
 
 @Entity
 @Table(name = "permissions")
@@ -21,6 +21,7 @@ public class Permission {
     @Column(name = "role")
     private Role role;
 
+    @NotNull(message = "RoomId must not be null")
     @Column(name = "room_id")
     private Integer roomId;
 

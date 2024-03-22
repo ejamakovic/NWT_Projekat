@@ -3,7 +3,6 @@ package ba.nwt.keycard.PermissionService.models;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import java.util.UUID;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -18,10 +17,10 @@ public class KeycardPermission {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "permissions_id")
-    private Permission permission;
-
-    @ManyToOne
     @JoinColumn(name = "keycard_id")
     private Keycard keycard;
+
+    @ManyToOne
+    @JoinColumn(name = "permission_id")
+    private Permission permission;
 }

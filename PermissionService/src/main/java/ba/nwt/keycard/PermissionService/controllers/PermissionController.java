@@ -1,14 +1,12 @@
 package ba.nwt.keycard.PermissionService.controllers;
 
+import ba.nwt.keycard.PermissionService.models.Keycard;
 import ba.nwt.keycard.PermissionService.models.Permission;
-import ba.nwt.keycard.PermissionService.repositories.PermissionRepository;
+import ba.nwt.keycard.PermissionService.services.KeycardPermissionService;
+import ba.nwt.keycard.PermissionService.services.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -16,52 +14,63 @@ import java.util.List;
 @RequestMapping("/api/permissions")
 public class PermissionController {
 
-    private final PermissionRepository permissionRepository;
+    private final PermissionService permissionService;
+    private final KeycardPermissionService keycardPermissionService;
 
     @Autowired
-    public PermissionController(PermissionRepository permissionRepository) {
-        this.permissionRepository = permissionRepository;
+    public PermissionController(PermissionService permissionService, KeycardPermissionService keycardPermissionService) {
+        this.permissionService = permissionService;
+        this.keycardPermissionService = keycardPermissionService;
     }
 
     // Get all permissions
     @GetMapping
     public ResponseEntity<List<Permission>> getAllPermissions() {
-        List<Permission> permissions = permissionRepository.findAll();
+        List<Permission> permissions = permissionService.getAllPermissions();
         return ResponseEntity.ok().body(permissions);
     }
 
     // Get permission by ID
     @GetMapping("/{id}")
     public ResponseEntity<Permission> getPermissionById(@PathVariable Integer id) {
-        return permissionRepository.findById(id)
-                .map(permission -> ResponseEntity.ok().body(permission))
-                .orElse(ResponseEntity.notFound().build());
+        Permission permission = permissionService.getPermissionById(id);
+        if (permission != null) {
+            return ResponseEntity.ok().body(permission);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Get permissions by room ID
     @GetMapping("/room/{roomId}")
     public ResponseEntity<List<Permission>> getPermissionsByRoomId(@PathVariable Integer roomId) {
-        List<Permission> permissions = permissionRepository.findByRoomId(roomId);
+        List<Permission> permissions = permissionService.getPermissionsByRoomId(roomId);
         return ResponseEntity.ok().body(permissions);
     }
 
     // Get permissions by floor ID
     @GetMapping("/floor/{floorId}")
     public ResponseEntity<List<Permission>> getPermissionsByFloorId(@PathVariable Integer floorId) {
-        List<Permission> permissions = permissionRepository.findByFloorId(floorId);
+        List<Permission> permissions = permissionService.getPermissionsByFloorId(floorId);
         return ResponseEntity.ok().body(permissions);
     }
 
     // Get permissions by building ID
     @GetMapping("/building/{buildingId}")
     public ResponseEntity<List<Permission>> getPermissionsByBuildingId(@PathVariable Integer buildingId) {
-        List<Permission> permissions = permissionRepository.findByBuildingId(buildingId);
+        List<Permission> permissions = permissionService.getPermissionsByBuildingId(buildingId);
         return ResponseEntity.ok().body(permissions);
     }
 
     @PostMapping
     public ResponseEntity<Permission> createPermission(@RequestBody Permission permission) {
-        Permission createdPermission = permissionRepository.save(permission);
+        Permission createdPermission = permissionService.createPermission(permission);
         return ResponseEntity.ok().body(createdPermission);
+    }
+
+    @GetMapping("/{permissionId}/keycards")
+    public ResponseEntity<List<Keycard>> getKeycardsByPermissionId(@PathVariable("permissionId") Integer permissionId) {
+        List<Keycard> keycards = keycardPermissionService.getKeycardsByPermissionId(permissionId);
+        return ResponseEntity.ok().body(keycards);
     }
 }
