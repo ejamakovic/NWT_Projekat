@@ -3,9 +3,12 @@ package ba.nwt.keycard.RequestService.models;
 import ba.nwt.keycard.RequestService.models.User.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
 
@@ -19,14 +22,19 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Value("${my.property:default}")
     private LocalDate timestamp;
 
+    @NotNull
+    @NotBlank(message = "Entry type is required")
     private String entryType;
 
     @ManyToOne
-    @JsonBackReference
     private User user;
 
+    @NotNull
+    @NotBlank(message = "Description is required")
     private String description;
 
     public Log(LocalDate now, String entryType1, User user1, String description1) {

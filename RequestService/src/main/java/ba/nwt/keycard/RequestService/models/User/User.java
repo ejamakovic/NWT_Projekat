@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.List;
 
@@ -27,7 +26,6 @@ public class User {
     @NotNull
     private String username;
 
-
     @NotNull
     private String email;
 
@@ -39,26 +37,27 @@ public class User {
 
     private Boolean active;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Request> requests;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Log> logs;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<Notification> notifications;
 
     @OneToOne
+    @JsonBackReference
     private Keycard keycard;
 
     @ManyToOne
     @JsonBackReference
     private Team team;
 
-    public User(String username, String email, String password, String role, Boolean active) throws MethodArgumentNotValidException {
+    public User(String username, String email, String password, String role, Boolean active) {
         this.username = username;
         this.email = email;
         passwordHash = password;
@@ -66,13 +65,13 @@ public class User {
         this.active = active;
     }
 
-    public User(String username1, String mail, String password1, String role1, Boolean b, Keycard keycard1, Team team1) throws MethodArgumentNotValidException {
-        username = username1;
-        email = mail;
-        role = role1;
-        passwordHash = password1;
-        active = b;
-        keycard = keycard1;
-        team = team1;
+    public User(String username, String email, String password, String role, Boolean active, Keycard keycard, Team team) {
+        this.username = username;
+        this.email = email;
+        passwordHash = password;
+        this.role = role;
+        this.active = active;
+        this.keycard = keycard;
+        this.team = team;
     }
 }

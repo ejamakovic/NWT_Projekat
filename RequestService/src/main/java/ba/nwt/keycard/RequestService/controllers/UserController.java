@@ -20,20 +20,18 @@ public class UserController {
 
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers(){
-        return new ResponseEntity<List<User>>(userService.getAllUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
 
-    @GetMapping(path = "/{id}")
+    @GetMapping( "/{id}")
     @ResponseBody
     public ResponseEntity<User> getUserById(@PathVariable Long id){
-        User user = userService.getUserById(id);
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
     @PostMapping("/")
     public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO user) {
-        User user1 = userService.createUser(user);
-        return new ResponseEntity<User>(user1, HttpStatus.OK);
+        return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
 }

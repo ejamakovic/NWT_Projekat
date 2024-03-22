@@ -23,7 +23,6 @@ public class Keycard {
     private Boolean isActive;
 
     @OneToOne(mappedBy = "keycard")
-    @JsonBackReference
     private User user;
 
     public Keycard(Boolean b) {

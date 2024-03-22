@@ -30,9 +30,7 @@ public class UserService {
     }
 
     public User createUser(UserDTO user) {
-        User user1 = userMapper.mapToUser(user);
-        userRepository.save(user1);
-        return user1;
+        return userRepository.save(userMapper.mapToUser(user));
     }
 
 }
