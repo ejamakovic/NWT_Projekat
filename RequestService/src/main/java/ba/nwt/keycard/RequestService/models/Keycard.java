@@ -1,14 +1,12 @@
 package ba.nwt.keycard.RequestService.models;
 
+import ba.nwt.keycard.RequestService.models.User.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.intellij.lang.annotations.Pattern;
 
 @Entity
 @Table(name = "keycards")

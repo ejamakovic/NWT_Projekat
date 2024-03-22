@@ -1,5 +1,6 @@
 package ba.nwt.keycard.RequestService.models;
 
+import ba.nwt.keycard.RequestService.models.User.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

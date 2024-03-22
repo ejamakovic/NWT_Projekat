@@ -1,15 +1,14 @@
 package ba.nwt.keycard.RequestService.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
-import ba.nwt.keycard.RequestService.models.User;
+import ba.nwt.keycard.RequestService.models.User.User;
+import ba.nwt.keycard.RequestService.models.User.UserDTO;
 import ba.nwt.keycard.RequestService.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO user) {
         User user1 = userService.createUser(user);
         return new ResponseEntity<User>(user1, HttpStatus.OK);
     }

@@ -1,7 +1,9 @@
 package ba.nwt.keycard.RequestService.services;
 
+import ba.nwt.keycard.RequestService.models.User.UserDTO;
+import ba.nwt.keycard.RequestService.models.User.UserMapper;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
-import ba.nwt.keycard.RequestService.models.User;
+import ba.nwt.keycard.RequestService.models.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,10 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -23,9 +29,10 @@ public class UserService {
         return user.orElse(null);
     }
 
-    public User createUser(User user) {
-        userRepository.save(user);
-        return user;
+    public User createUser(UserDTO user) {
+        User user1 = userMapper.mapToUser(user);
+        userRepository.save(user1);
+        return user1;
     }
 
 }
