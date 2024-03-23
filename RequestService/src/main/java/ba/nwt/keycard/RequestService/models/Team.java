@@ -24,11 +24,17 @@ public class Team {
 
     @NotNull
     @NotBlank(message = "Name of team is  required")
+    @Column(unique = true)
     private String name;
 
     private Long managerId;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<Request> requests;
+
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<User> users;
 
     public Team(String name) {

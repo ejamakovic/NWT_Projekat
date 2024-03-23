@@ -20,10 +20,27 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    private Long roomId;
+
+    @ManyToOne
+    private Team team;
+
     @ManyToOne
     private User user;
 
     public Request(User user1) {
         user = user1;
+    }
+
+    public Request(User user, Long roomId) {
+        this.user = user;
+        this.roomId = roomId;
+    }
+
+    public Request(User user, Long roomId, Team team) {
+        this.user = user;
+        this.roomId = roomId;
+        this.team = team;
     }
 }

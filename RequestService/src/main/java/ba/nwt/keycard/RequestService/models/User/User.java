@@ -24,9 +24,11 @@ public class User {
     private Long id;
 
     @NotNull
+    @Column(unique = true)
     private String username;
 
     @NotNull
+    @Column(unique = true)
     private String email;
 
     @NotNull
@@ -50,11 +52,9 @@ public class User {
     private List<Notification> notifications;
 
     @OneToOne
-    @JsonBackReference
     private Keycard keycard;
 
     @ManyToOne
-    @JsonBackReference
     private Team team;
 
     public User(String username, String email, String password, String role, Boolean active) {

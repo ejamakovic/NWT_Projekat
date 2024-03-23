@@ -1,7 +1,6 @@
 package ba.nwt.keycard.RequestService.models;
 
 import ba.nwt.keycard.RequestService.models.User.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +22,8 @@ public class Log {
     private Long id;
 
     @NotNull
+    private Long roomId;
+
     @Value("${my.property:default}")
     private LocalDate timestamp;
 
@@ -42,5 +43,13 @@ public class Log {
         entryType = entryType1;
         user = user1;
         description = description1;
+    }
+
+    public Log(LocalDate now, String entryType1, User user1, String description1, Long l) {
+        timestamp = now;
+        entryType = entryType1;
+        user = user1;
+        description = description1;
+        roomId = l;
     }
 }

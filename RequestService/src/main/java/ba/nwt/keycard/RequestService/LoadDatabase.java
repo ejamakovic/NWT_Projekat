@@ -50,8 +50,8 @@ public class LoadDatabase {
             team1 = teamRepository.save(team1);
             team2 = teamRepository.save(team2);
             // Add logs
-            Log log1 = new Log(LocalDate.now(), "entryType1", user1, "description1");
-            Log log2 = new Log(LocalDate.now(), "entryType2", user2, "description2");
+            Log log1 = new Log(LocalDate.now(), "entryType1", user1, "description1", 1L);
+            Log log2 = new Log(LocalDate.now(), "entryType2", user2, "description2", 2L);
             logRepository.saveAll(Arrays.asList(log1, log2));
 
             // Add notifications
@@ -60,8 +60,8 @@ public class LoadDatabase {
             notificationRepository.saveAll(Arrays.asList(notification1, notification2));
 
             // Add requests
-            Request request1 = new Request(user1);
-            Request request2 = new Request(user2);
+            Request request1 = new Request(user1, 1L, team1);
+            Request request2 = new Request(user2, 1L, team2);
             requestRepository.saveAll(Arrays.asList(request1, request2));
 
         };

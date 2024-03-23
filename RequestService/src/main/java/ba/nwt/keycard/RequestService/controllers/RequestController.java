@@ -36,6 +36,7 @@ public class RequestController {
     public ResponseEntity<Request> createRequest(@Valid @RequestBody Request request, @PathVariable Long id){
         User user = userService.getUserById(id);
         request.setUser(user);
+        request.setTeam(user.getTeam());
         return new ResponseEntity<>(requestService.createRequest(request), HttpStatus.OK);
     }
 }
