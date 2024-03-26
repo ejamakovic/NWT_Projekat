@@ -1,5 +1,6 @@
 package ba.nwt.keycard.RoomService.controllers;
 
+import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.RoomService.models.Building;
 import ba.nwt.keycard.RoomService.services.BuildingService;
 import jakarta.validation.Valid;
@@ -29,33 +30,33 @@ public class BuildingController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getBuildingById(@PathVariable("id") Long id) {
         if (id == null) {
-            return ResponseEntity.badRequest().body("ID is required");
+            throw new IllegalArgumentException("ID is required");
         }
 
         if (id <= 0) {
-            return ResponseEntity.badRequest().body("ID must be a positive number");
+            throw new IllegalArgumentException("ID must be a positive number");
         }
 
         Building building = buildingService.getBuildingById(id);
         if (building != null) {
             return ResponseEntity.ok().body(building);
         } else {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Building not found with id " + id);
         }
     }
 
     @PutMapping("/{id}/name")
     public ResponseEntity<String> updateName(@PathVariable("id") Long id, @RequestParam String name) {
         if (id == null) {
-            return ResponseEntity.badRequest().body("ID is required");
+            throw new IllegalArgumentException("ID is required");
         }
 
         if (id <= 0) {
-            return ResponseEntity.badRequest().body("ID must be a positive number");
+            throw new IllegalArgumentException("ID must be a positive number");
         }
 
         if (name == null || name.isEmpty()) {
-            return ResponseEntity.badRequest().body("Name is required");
+            throw new IllegalArgumentException("Building name is required");
         }
 
         buildingService.updateName(id, name);
@@ -65,11 +66,11 @@ public class BuildingController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteBuilding(@PathVariable("id") Long id) {
         if (id == null) {
-            return ResponseEntity.badRequest().body("ID is required");
+            throw new IllegalArgumentException("ID is required");
         }
 
         if (id <= 0) {
-            return ResponseEntity.badRequest().body("ID must be a positive number");
+            throw new IllegalArgumentException("ID must be a positive number");
         }
 
         buildingService.deleteBuilding(id);
@@ -79,11 +80,11 @@ public class BuildingController {
     @PostMapping
     public ResponseEntity<?> addBuilding(@Valid @RequestBody(required = false) Building building) {
         if (building == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Request body is missing");
+            throw new IllegalArgumentException("Building object is required");
         }
 
         if (building.getName() == null) {
-            return ResponseEntity.badRequest().body("Building name is required");
+            throw new IllegalArgumentException("Building name is required");
         }
 
         Building savedBuilding = buildingService.addBuilding(building);

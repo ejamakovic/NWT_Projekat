@@ -1,5 +1,6 @@
 package ba.nwt.keycard.RoomService.services;
 
+import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.RoomService.models.Building;
 import ba.nwt.keycard.RoomService.repositories.BuildingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class BuildingService {
         if (building != null) {
             building.setName(name);
             buildingRepository.save(building);
+        } else {
+            throw new ResourceNotFoundException("Building not found with id " + id);
         }
     }
 
