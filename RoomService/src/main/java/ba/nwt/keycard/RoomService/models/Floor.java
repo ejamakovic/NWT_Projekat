@@ -1,11 +1,10 @@
 package ba.nwt.keycard.RoomService.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "floors")
@@ -15,14 +14,26 @@ import java.util.List;
 public class Floor {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @NotNull(message = "Floor number must not be null")
+    @Column(name = "floor_number")
     private Integer floorNumber;
+
     @ManyToOne
+    @JoinColumn(name = "building_id")
     private Building building;
-    @OneToMany(mappedBy = "floor")
-    private List<Room> rooms;
 
+    public void setFloorNumber(Integer floorNumber) {
+        this.floorNumber = floorNumber;
+    }
 
-
+    // nema potrebe za ovim za sad...
+    // mozda kasnije, ako bude potrebno dohvatati sve sobe na spratu
+    /*
+     * @OneToMany(mappedBy = "room")
+     * private List<Room> rooms;
+     */
 }
