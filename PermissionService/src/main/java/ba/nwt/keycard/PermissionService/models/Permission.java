@@ -20,6 +20,7 @@ public class Permission {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Role must not be null")
     @Column(name = "role")
     private Role role;
 
@@ -32,8 +33,5 @@ public class Permission {
 
     @Column(name = "building_id")
     private Integer buildingId;
-
-    @OneToMany(mappedBy = "permission")
-    private List<KeycardPermission> keycardPermission;
 
 }

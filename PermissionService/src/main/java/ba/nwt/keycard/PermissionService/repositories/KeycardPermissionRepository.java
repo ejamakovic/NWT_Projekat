@@ -8,8 +8,6 @@ import java.util.List;
 @Repository
 public interface KeycardPermissionRepository extends JpaRepository<KeycardPermission, Integer> {
 
-    List<Integer> findPermissionsByKeycardId(@Param("keycardId") Integer keycardId);
-
     List<KeycardPermission> findByKeycardId(Integer keycardId);
 
     List<KeycardPermission> findByPermissionId(Integer permissionId);
