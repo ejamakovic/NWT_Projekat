@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class InitalizeService {
 
     @Autowired
-    private BuildingRepostory buildingRepostory;
+    private BuildingRepository buildingRepository;
 
     @Autowired
     private FloorRepository floorRepository;
@@ -18,12 +18,14 @@ public class InitalizeService {
     private RoomRepository roomRepository;
 
     public void saveBuilding(Building building) {
-        buildingRepostory.save(building);
+        buildingRepository.save(building);
     }
-    public void saveFloor(Floor floor){
+
+    public void saveFloor(Floor floor) {
         floorRepository.save(floor);
     }
-    public void saveRoom(Room room){
+
+    public void saveRoom(Room room) {
         roomRepository.save(room);
     }
 
