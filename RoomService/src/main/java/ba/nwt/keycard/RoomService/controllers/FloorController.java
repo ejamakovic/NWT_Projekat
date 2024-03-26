@@ -57,7 +57,12 @@ public class FloorController {
         }
 
         List<Floor> floors = floorService.getFloorsByBuildingId(buildingId);
-        return ResponseEntity.ok().body(floors);
+
+        if (floors != null) {
+            return ResponseEntity.ok().body(floors);
+        } else {
+            throw new ResourceNotFoundException("No floors found for building with id " + buildingId);
+        }
     }
 
     @PutMapping("/{id}/floorNumber")
