@@ -32,7 +32,6 @@ public class RoomServiceApplication implements CommandLineRunner {
 		Room room = new Room();
 		room.setName("1-15");
 		room.setFloor(floor);
-		room.setAccessLevel(2);
 		initalizeService.saveRoom(room);
 
 	}
