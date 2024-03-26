@@ -26,7 +26,7 @@ public class FloorService {
         return floorRepository.findById(id).orElse(null);
     }
 
-    public List<Floor> getAllFloorsByBuildingId(Long buildingId) {
+    public List<Floor> getFloorsByBuildingId(Long buildingId) {
         return floorRepository.findFloorsByBuildingId(buildingId);
     }
 

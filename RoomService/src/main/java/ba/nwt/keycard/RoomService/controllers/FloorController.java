@@ -56,7 +56,7 @@ public class FloorController {
             throw new IllegalArgumentException("Building ID must be a positive number");
         }
 
-        List<Floor> floors = floorService.getAllFloorsByBuildingId(buildingId);
+        List<Floor> floors = floorService.getFloorsByBuildingId(buildingId);
         return ResponseEntity.ok().body(floors);
     }
 
