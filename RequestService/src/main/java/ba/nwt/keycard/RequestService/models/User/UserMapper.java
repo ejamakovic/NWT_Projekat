@@ -1,4 +1,5 @@
 package ba.nwt.keycard.RequestService.models.User;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -17,4 +18,3 @@ public class UserMapper {
         return user;
     }
 }
-

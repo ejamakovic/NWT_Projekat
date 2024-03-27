@@ -1,9 +1,10 @@
 package ba.nwt.keycard.RoomService.controllers;
 
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
-import ba.nwt.keycard.RoomService.models.Building;
-import ba.nwt.keycard.RoomService.models.Floor;
-import ba.nwt.keycard.RoomService.models.Room;
+import ba.nwt.keycard.RoomService.models.Building.Building;
+import ba.nwt.keycard.RoomService.models.Floor.Floor;
+import ba.nwt.keycard.RoomService.models.Room.Room;
+import ba.nwt.keycard.RoomService.models.Room.RoomDTO;
 import ba.nwt.keycard.RoomService.services.FloorService;
 import ba.nwt.keycard.RoomService.services.RoomService;
 import jakarta.validation.Valid;
@@ -118,17 +119,17 @@ public class RoomController {
         return ResponseEntity.ok().body("Room deleted successfully");
     }
 
-    @PostMapping
-    public ResponseEntity<?> addRoom(@Valid @RequestBody(required = false) Room room) {
-        if (room == null) {
+    @PostMapping("/add")
+    public ResponseEntity<?> addRoom(@Valid @RequestBody(required = false) RoomDTO roomDTO) {
+        if (roomDTO == null) {
             throw new IllegalArgumentException("Request body is missing");
         }
 
-        if (room.getName() == null) {
+        if (roomDTO.getName() == null) {
             throw new IllegalArgumentException("Room name is required");
         }
 
-        Room savedRoom = roomService.addRoom(room);
+        Room savedRoom = roomService.addRoom(roomDTO);
         return ResponseEntity.ok().body(savedRoom);
     }
 }

@@ -1,7 +1,7 @@
 package ba.nwt.keycard.RoomService.services;
 
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
-import ba.nwt.keycard.RoomService.models.Floor;
+import ba.nwt.keycard.RoomService.models.Floor.Floor;
 import ba.nwt.keycard.RoomService.repositories.FloorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

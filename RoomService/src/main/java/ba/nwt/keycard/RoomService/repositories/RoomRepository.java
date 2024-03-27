@@ -1,7 +1,7 @@
 package ba.nwt.keycard.RoomService.repositories;
 
-import ba.nwt.keycard.RoomService.models.Floor;
-import ba.nwt.keycard.RoomService.models.Room;
+import ba.nwt.keycard.RoomService.models.Floor.Floor;
+import ba.nwt.keycard.RoomService.models.Room.Room;
 
 import java.util.List;
 

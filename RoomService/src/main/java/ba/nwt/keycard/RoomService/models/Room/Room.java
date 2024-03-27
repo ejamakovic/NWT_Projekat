@@ -1,5 +1,6 @@
-package ba.nwt.keycard.RoomService.models;
+package ba.nwt.keycard.RoomService.models.Room;
 
+import ba.nwt.keycard.RoomService.models.Floor.Floor;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -7,11 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "buildings")
+@Table(name = "rooms")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Building {
+public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +23,11 @@ public class Building {
     @Column(name = "name")
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "floor_id")
+    private Floor floor;
+
     public void setName(String name) {
         this.name = name;
     }
-
-    // nema potrebe za ovim za sad...
-    // mozda kasnije, ako bude potrebno dohvatati sve spratove u zgradi
-    /*
-     * @OneToMany(mappedBy = "building")
-     * private List<Floor> floors;
-     */
-
 }

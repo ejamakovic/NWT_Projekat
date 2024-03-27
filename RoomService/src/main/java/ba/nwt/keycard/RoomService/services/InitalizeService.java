@@ -1,6 +1,8 @@
 package ba.nwt.keycard.RoomService.services;
 
-import ba.nwt.keycard.RoomService.models.*;
+import ba.nwt.keycard.RoomService.models.Building.Building;
+import ba.nwt.keycard.RoomService.models.Floor.Floor;
+import ba.nwt.keycard.RoomService.models.Room.Room;
 import ba.nwt.keycard.RoomService.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

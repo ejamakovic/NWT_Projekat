@@ -1,5 +1,6 @@
-package ba.nwt.keycard.RoomService.models;
+package ba.nwt.keycard.RoomService.models.Floor;
 
+import ba.nwt.keycard.RoomService.models.Building.Building;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

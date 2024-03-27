@@ -1,8 +1,8 @@
 package ba.nwt.keycard.RoomService.controllers;
 
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
-import ba.nwt.keycard.RoomService.models.Building;
-import ba.nwt.keycard.RoomService.models.Floor;
+import ba.nwt.keycard.RoomService.models.Building.Building;
+import ba.nwt.keycard.RoomService.models.Floor.Floor;
 import ba.nwt.keycard.RoomService.services.FloorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

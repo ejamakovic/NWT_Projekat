@@ -1,7 +1,9 @@
 package ba.nwt.keycard.RoomService.services;
 
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
-import ba.nwt.keycard.RoomService.models.Room;
+import ba.nwt.keycard.RoomService.models.Room.Room;
+import ba.nwt.keycard.RoomService.models.Room.RoomDTO;
+import ba.nwt.keycard.RoomService.models.Room.RoomMapper;
 import ba.nwt.keycard.RoomService.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +14,12 @@ import java.util.List;
 public class RoomService {
 
     private final RoomRepository roomRepository;
+    private final RoomMapper roomMapper;
 
     @Autowired
-    public RoomService(RoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository, RoomMapper roomMapper) {
         this.roomRepository = roomRepository;
+        this.roomMapper = roomMapper;
     }
 
     public List<Room> getAllRooms() {
@@ -48,7 +52,8 @@ public class RoomService {
         roomRepository.deleteById(id);
     }
 
-    public Room addRoom(Room room) {
+    public Room addRoom(RoomDTO roomDTO) {
+        Room room = roomMapper.toEntity(roomDTO);
         return roomRepository.save(room);
     }
 }
