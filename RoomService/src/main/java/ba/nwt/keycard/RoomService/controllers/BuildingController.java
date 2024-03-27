@@ -2,6 +2,7 @@ package ba.nwt.keycard.RoomService.controllers;
 
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.RoomService.models.Building.Building;
+import ba.nwt.keycard.RoomService.models.Building.BuildingDTO;
 import ba.nwt.keycard.RoomService.services.BuildingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,13 @@ public class BuildingController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Building>> getAllBuildings() {
-        List<Building> buildings = buildingService.getAllBuildings();
-        return ResponseEntity.ok().body(buildings);
+    public ResponseEntity<List<BuildingDTO>> getAllBuildings() {
+        List<BuildingDTO> buildingDTOs = buildingService.getAllBuildings();
+        return ResponseEntity.ok().body(buildingDTOs);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBuildingById(@PathVariable("id") Long id) {
+    public ResponseEntity<BuildingDTO> getBuildingById(@PathVariable("id") Long id) {
         if (id == null) {
             throw new IllegalArgumentException("ID is required");
         }
@@ -37,16 +38,16 @@ public class BuildingController {
             throw new IllegalArgumentException("ID must be a positive number");
         }
 
-        Building building = buildingService.getBuildingById(id);
-        if (building != null) {
-            return ResponseEntity.ok().body(building);
+        BuildingDTO buildingDTO = buildingService.getBuildingById(id);
+        if (buildingDTO != null) {
+            return ResponseEntity.ok().body(buildingDTO);
         } else {
             throw new ResourceNotFoundException("Building not found with id " + id);
         }
     }
 
     @PutMapping("/{id}/name")
-    public ResponseEntity<String> updateName(@PathVariable("id") Long id, @RequestParam String name) {
+    public ResponseEntity<BuildingDTO> updateName(@PathVariable("id") Long id, @RequestParam String name) {
         if (id == null) {
             throw new IllegalArgumentException("ID is required");
         }
@@ -59,8 +60,8 @@ public class BuildingController {
             throw new IllegalArgumentException("Building name is required");
         }
 
-        buildingService.updateName(id, name);
-        return ResponseEntity.ok().body("Building name updated successfully");
+        BuildingDTO buildingDTO = buildingService.updateName(id, name);
+        return ResponseEntity.ok().body(buildingDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -78,7 +79,7 @@ public class BuildingController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addBuilding(@Valid @RequestBody(required = false) Building building) {
+    public ResponseEntity<BuildingDTO> addBuilding(@Valid @RequestBody(required = false) Building building) {
         if (building == null) {
             throw new IllegalArgumentException("Building object is required");
         }
@@ -87,7 +88,7 @@ public class BuildingController {
             throw new IllegalArgumentException("Building name is required");
         }
 
-        Building savedBuilding = buildingService.addBuilding(building);
-        return ResponseEntity.ok().body(savedBuilding);
+        BuildingDTO savedBuildingDTO = buildingService.addBuilding(building);
+        return ResponseEntity.ok().body(savedBuildingDTO);
     }
 }
