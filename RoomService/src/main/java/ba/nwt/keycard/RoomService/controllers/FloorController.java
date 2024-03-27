@@ -3,6 +3,8 @@ package ba.nwt.keycard.RoomService.controllers;
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.RoomService.models.Building.Building;
 import ba.nwt.keycard.RoomService.models.Floor.Floor;
+import ba.nwt.keycard.RoomService.models.Floor.FloorDTO;
+import ba.nwt.keycard.RoomService.models.Room.RoomDTO;
 import ba.nwt.keycard.RoomService.services.FloorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +25,13 @@ public class FloorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Floor>> getAllFloors() {
-        List<Floor> floors = floorService.getAllFloors();
-        return ResponseEntity.ok().body(floors);
+    public ResponseEntity<List<FloorDTO>> getAllFloors() {
+        List<FloorDTO> floorDTOs = floorService.getAllFloors();
+        return ResponseEntity.ok().body(floorDTOs);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getFloorById(@PathVariable("id") Long id) {
+    public ResponseEntity<FloorDTO> getFloorById(@PathVariable("id") Long id) {
         if (id == null) {
             throw new IllegalArgumentException("ID is required");
         }
@@ -38,16 +40,16 @@ public class FloorController {
             throw new IllegalArgumentException("ID must be a positive number");
         }
 
-        Floor floor = floorService.getFloorById(id);
-        if (floor != null) {
-            return ResponseEntity.ok().body(floor);
+        FloorDTO floorDTO = floorService.getFloorById(id);
+        if (floorDTO != null) {
+            return ResponseEntity.ok().body(floorDTO);
         } else {
             throw new ResourceNotFoundException("Floor not found with id " + id);
         }
     }
 
     @GetMapping("/building/{buildingId}")
-    public ResponseEntity<List<Floor>> getAllFloorsByBuildingId(@PathVariable("buildingId") Long buildingId) {
+    public ResponseEntity<List<FloorDTO>> getFloorsByBuildingId(@PathVariable("buildingId") Long buildingId) {
         if (buildingId == null) {
             throw new IllegalArgumentException("Building ID is required");
         }
@@ -56,17 +58,17 @@ public class FloorController {
             throw new IllegalArgumentException("Building ID must be a positive number");
         }
 
-        List<Floor> floors = floorService.getFloorsByBuildingId(buildingId);
+        List<FloorDTO> floorDTOs = floorService.getFloorsByBuildingId(buildingId);
 
-        if (floors != null) {
-            return ResponseEntity.ok().body(floors);
+        if (floorDTOs != null) {
+            return ResponseEntity.ok().body(floorDTOs);
         } else {
             throw new ResourceNotFoundException("No floors found for building with id " + buildingId);
         }
     }
 
     @PutMapping("/{id}/floorNumber")
-    public ResponseEntity<String> updateFloorNumber(@PathVariable("id") Long id, @RequestParam Integer floorNumber) {
+    public ResponseEntity<FloorDTO> updateFloorNumber(@PathVariable("id") Long id, @RequestParam Integer floorNumber) {
         if (id == null) {
             throw new IllegalArgumentException("ID is required");
         }
@@ -79,8 +81,8 @@ public class FloorController {
             throw new IllegalArgumentException("Floor number is required");
         }
 
-        floorService.updateFloorNumber(id, floorNumber);
-        return ResponseEntity.ok().body("Floor number updated successfully");
+        FloorDTO updatedFloorDTO = floorService.updateFloorNumber(id, floorNumber);
+        return ResponseEntity.ok().body(updatedFloorDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -98,16 +100,16 @@ public class FloorController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addFloor(@Valid @RequestBody(required = false) Floor floor) {
-        if (floor == null) {
+    public ResponseEntity<FloorDTO> addFloor(@Valid @RequestBody(required = false) FloorDTO floorDTO) {
+        if (floorDTO == null) {
             throw new IllegalArgumentException("Request body is missing");
         }
 
-        if (floor.getFloorNumber() == null) {
+        if (floorDTO.getFloorNumber() == null) {
             throw new IllegalArgumentException("Floor number is required");
         }
 
-        Floor savedFloor = floorService.addFloor(floor);
-        return ResponseEntity.ok().body(savedFloor);
+        FloorDTO savedFloorDTO = floorService.addFloor(floorDTO);
+        return ResponseEntity.ok().body(savedFloorDTO);
     }
 }
