@@ -22,27 +22,30 @@ public class RoomService {
         this.roomMapper = roomMapper;
     }
 
-    public List<Room> getAllRooms() {
-        return roomRepository.findAll();
+    public List<RoomDTO> getAllRooms() {
+        return roomMapper.toDTOList(roomRepository.findAll());
     }
 
-    public Room getRoomById(Long id) {
-        return roomRepository.findById(id).orElse(null);
+    public RoomDTO getRoomById(Long id) {
+        return roomMapper.toDTO(roomRepository.findById(id).orElse(null));
     }
 
-    public List<Room> getRoomsByFloorId(Long floorId) {
-        return roomRepository.findRoomsByFloorId(floorId);
+    public List<RoomDTO> getRoomsByFloorId(Long floorId) {
+        return roomMapper.toDTOList(roomRepository.findRoomsByFloorId(floorId));
     }
 
-    public List<Room> getRoomsByBuildingId(Long buildingId) {
-        return roomRepository.findRoomsByBuildingIdSortedByFloorId(buildingId);
+    public List<RoomDTO> getRoomsByBuildingId(Long buildingId) {
+        List<Room> rooms = roomRepository.findRoomsByBuildingIdSortedByFloorId(buildingId);
+        return roomMapper.toDTOList(rooms);
     }
 
-    public void updateRoomName(Long id, String name) {
+    public RoomDTO updateRoomName(Long id, String name) {
         Room room = roomRepository.findById(id).orElse(null);
+
         if (room != null) {
             room.setName(name);
             roomRepository.save(room);
+            return roomMapper.toDTO(room);
         } else {
             throw new ResourceNotFoundException("Room not found with id " + id);
         }
@@ -52,8 +55,9 @@ public class RoomService {
         roomRepository.deleteById(id);
     }
 
-    public Room addRoom(RoomDTO roomDTO) {
+    public RoomDTO addRoom(RoomDTO roomDTO) {
         Room room = roomMapper.toEntity(roomDTO);
-        return roomRepository.save(room);
+        RoomDTO savedRoomDTO = roomMapper.toDTO(roomRepository.save(room));
+        return savedRoomDTO;
     }
 }

@@ -1,5 +1,8 @@
 package ba.nwt.keycard.RoomService.models.Room;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
@@ -22,6 +25,10 @@ public class RoomMapper {
         dto.setName(room.getName());
         dto.setFloorId(room.getFloor().getId());
         return dto;
+    }
+
+    public List<RoomDTO> toDTOList(List<Room> rooms) {
+        return rooms.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     public Room toEntity(RoomDTO dto) {
