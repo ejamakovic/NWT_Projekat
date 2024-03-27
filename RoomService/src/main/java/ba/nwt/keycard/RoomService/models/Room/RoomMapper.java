@@ -3,10 +3,10 @@ package ba.nwt.keycard.RoomService.models.Room;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
-import ba.nwt.keycard.RoomService.models.Building.Building;
 import ba.nwt.keycard.RoomService.models.Floor.Floor;
 import ba.nwt.keycard.RoomService.repositories.FloorRepository;
 
@@ -15,6 +15,7 @@ public class RoomMapper {
 
     private static FloorRepository floorRepository;
 
+    @Autowired
     public RoomMapper(FloorRepository floorRepository) {
         RoomMapper.floorRepository = floorRepository;
     }
