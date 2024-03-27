@@ -99,7 +99,7 @@ public class FloorController {
         return ResponseEntity.ok().body("Floor deleted successfully");
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<FloorDTO> addFloor(@Valid @RequestBody(required = false) FloorDTO floorDTO) {
         if (floorDTO == null) {
             throw new IllegalArgumentException("Request body is missing");

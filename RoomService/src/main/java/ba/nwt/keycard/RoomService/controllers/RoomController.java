@@ -120,7 +120,7 @@ public class RoomController {
         return ResponseEntity.ok().body("Room deleted successfully");
     }
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseEntity<RoomDTO> addRoom(@Valid @RequestBody(required = false) RoomDTO roomDTO) {
         if (roomDTO == null) {
             throw new IllegalArgumentException("Request body is missing");

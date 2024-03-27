@@ -78,7 +78,7 @@ public class BuildingController {
         return ResponseEntity.ok().body("Building deleted successfully");
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<BuildingDTO> addBuilding(@Valid @RequestBody(required = false) Building building) {
         if (building == null) {
             throw new IllegalArgumentException("Building object is required");
