@@ -1,6 +1,9 @@
 package ba.nwt.keycard.RoomService.models.Floor;
 
+import java.util.List;
+
 import ba.nwt.keycard.RoomService.models.Building.Building;
+import ba.nwt.keycard.RoomService.models.Room.Room;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,7 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "floors")
+@Table(name = "floors", uniqueConstraints = @UniqueConstraint(columnNames = { "floor_number", "building_id" }))
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,10 +34,8 @@ public class Floor {
         this.floorNumber = floorNumber;
     }
 
-    // nema potrebe za ovim za sad...
-    // mozda kasnije, ako bude potrebno dohvatati sve sobe na spratu
-    /*
-     * @OneToMany(mappedBy = "room")
-     * private List<Room> rooms;
-     */
+    // potreban OneToMany zbog Cascade.ALL (ne moze na ManyToOne)
+    @OneToMany(mappedBy = "floor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Room> rooms;
+
 }
