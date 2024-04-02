@@ -1,6 +1,8 @@
 package ba.nwt.keycard.RequestService.models;
 
 import ba.nwt.keycard.RequestService.models.User.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -25,6 +28,8 @@ public class Log {
     private Long roomId;
 
     @Value("${my.property:default}")
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate timestamp;
 
     @NotNull
@@ -32,6 +37,7 @@ public class Log {
     private String entryType;
 
     @ManyToOne
+    @NotNull(message = "Log must have userId")
     private User user;
 
     @NotNull

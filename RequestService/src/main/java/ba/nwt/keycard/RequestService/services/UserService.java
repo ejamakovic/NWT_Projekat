@@ -33,4 +33,18 @@ public class UserService {
         return userRepository.save(userMapper.mapToUser(user));
     }
 
+    public boolean deleteUserByUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            userRepository.delete(user);
+            return true;
+        }
+        return false;
+    }
+
+    public User getUserByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.orElse(null);
+    }
 }

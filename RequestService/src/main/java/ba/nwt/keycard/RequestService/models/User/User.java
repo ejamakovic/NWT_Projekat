@@ -1,15 +1,14 @@
 package ba.nwt.keycard.RequestService.models.User;
 
 import ba.nwt.keycard.RequestService.models.*;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
-
-import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -37,25 +36,40 @@ public class User {
     @NotNull
     private String role;
 
+    @NotNull
     private Boolean active;
 
-    @OneToMany(mappedBy = "user")
+    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @JsonIgnore
-    private List<Request> requests;
+    private Set<Request> requests;
 
-    @OneToMany(mappedBy = "user")
+    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @JsonIgnore
-    private List<Log> logs;
+    private Set<Log> logs;
 
-    @OneToMany(mappedBy = "user")
+    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @JsonIgnore
-    private List<Notification> notifications;
+    private Set<Notification> notifications;
+
+    //@OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "keycard_id")
+    private Keycard keycard;
 
     @OneToOne
-    private Keycard keycard;
+    private Team managerTeam;
+
 
     @ManyToOne
     private Team team;
+
+    @AssertTrue(message = "Either managerTeam or team should be present, but not both")
+    private boolean isValid() {
+        return (managerTeam == null && team != null) || (managerTeam != null && team == null) || (managerTeam == null && team == null);
+    }
 
     public User(String username, String email, String password, String role, Boolean active) {
         this.username = username;
@@ -73,5 +87,14 @@ public class User {
         this.active = active;
         this.keycard = keycard;
         this.team = team;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                // Include other relevant fields but avoid cyclic references
+                '}';
     }
 }

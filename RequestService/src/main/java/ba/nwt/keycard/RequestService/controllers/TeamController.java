@@ -32,4 +32,16 @@ public class TeamController {
     public ResponseEntity<Team> createTeam(@Valid @RequestBody Team team) {
         return new ResponseEntity<>(teamService.createTeam(team), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTeam(@PathVariable Long id) {
+        boolean deleted = teamService.deleteTeamById(id);
+        if (deleted) {
+            return ResponseEntity.ok("Team with id " + id + " has been deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Team not found with id: " + id);
+        }
+    }
+
+
 }

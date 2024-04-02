@@ -24,4 +24,15 @@ public class TeamService {
         teamRepository.save(team);
         return team;
     }
+
+    public boolean deleteTeamById(Long id) {
+        Optional<Team> teamOptional = teamRepository.findById(id);
+        if (teamOptional.isPresent()) {
+            Team team = teamOptional.get();
+            teamRepository.delete(team);
+            return true;
+        }
+        return false;
+    }
+
 }

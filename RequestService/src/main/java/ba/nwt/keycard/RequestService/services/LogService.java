@@ -1,7 +1,7 @@
 package ba.nwt.keycard.RequestService.services;
 
 import ba.nwt.keycard.RequestService.models.Log;
-import ba.nwt.keycard.RequestService.models.Notification;
+import ba.nwt.keycard.RequestService.models.User.User;
 import ba.nwt.keycard.RequestService.repositories.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,4 +27,15 @@ public class LogService {
     public Log createLog(Log log){
         return logRepository.save(log);
     }
+
+    public boolean deleteLogById(Long id) {
+        Optional<Log> logOptional = logRepository.findById(id);
+        if (logOptional.isPresent()) {
+            Log log = logOptional.get();
+            logRepository.delete(log);
+            return true;
+        }
+        return false;
+    }
+
 }

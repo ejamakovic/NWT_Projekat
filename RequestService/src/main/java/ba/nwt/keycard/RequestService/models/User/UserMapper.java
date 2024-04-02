@@ -1,13 +1,16 @@
 package ba.nwt.keycard.RequestService.models.User;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import javax.validation.Valid;
 
 @Component
 public class UserMapper {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public User mapToUser(UserDTO userDTO) {
+    public User mapToUser(@Valid UserDTO userDTO) {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
@@ -17,4 +20,3 @@ public class UserMapper {
         return user;
     }
 }
-
