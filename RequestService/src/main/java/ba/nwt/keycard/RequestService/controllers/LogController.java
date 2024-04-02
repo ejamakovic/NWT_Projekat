@@ -38,4 +38,15 @@ public class LogController {
         log.setUser(user);
         return new ResponseEntity<>(logService.createLog(log), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteLog(@PathVariable Long id) {
+        boolean deleted = logService.deleteLogById(id);
+        if (deleted) {
+            return ResponseEntity.ok("Log with id " + id + " has been deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Log not found with id: " + id);
+        }
+    }
+
 }

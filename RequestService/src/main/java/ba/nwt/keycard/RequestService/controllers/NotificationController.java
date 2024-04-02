@@ -39,4 +39,14 @@ public class NotificationController {
         return new ResponseEntity<>(notificationService.createNotification(notification), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteNotificationById(@PathVariable Long id) {
+        boolean deleted = notificationService.deleteNotificationById(id);
+        if (deleted) {
+            return ResponseEntity.ok("Notification with id " + id + " has been deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification not found with id: " + id);
+        }
+    }
+
 }

@@ -39,4 +39,14 @@ public class RequestController {
         request.setTeam(user.getTeam());
         return new ResponseEntity<>(requestService.createRequest(request), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteRequestById(@PathVariable Long id) {
+        boolean deleted = requestService.deleteRequestById(id);
+        if (deleted) {
+            return ResponseEntity.ok("Request with id " + id + " has been deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found with id: " + id);
+        }
+    }
 }

@@ -27,4 +27,14 @@ public class RequestService {
     public Request createRequest(Request request){
         return requestRepository.save(request);
     }
+
+    public boolean deleteRequestById(Long id) {
+        Optional<Request> requestOptional = requestRepository.findById(id);
+        if (requestOptional.isPresent()) {
+            Request request = requestOptional.get();
+            requestRepository.delete(request);
+            return true;
+        }
+        return false;
+    }
 }

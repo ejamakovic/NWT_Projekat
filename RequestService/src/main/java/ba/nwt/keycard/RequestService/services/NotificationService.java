@@ -27,4 +27,14 @@ public class NotificationService {
     public Notification createNotification(Notification notification){
         return notificationRepository.save(notification);
     }
+
+    public boolean deleteNotificationById(Long id) {
+        Optional<Notification> notificationOptional = notificationRepository.findById(id);
+        if (notificationOptional.isPresent()) {
+            Notification notification = notificationOptional.get();
+            notificationRepository.delete(notification);
+            return true;
+        }
+        return false;
+    }
 }

@@ -23,15 +23,31 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
-
-    @GetMapping( "/{id}")
+    @GetMapping( "/id/{id}")
     @ResponseBody
     public ResponseEntity<User> getUserById(@PathVariable Long id){
         return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    }
+
+    @GetMapping( "/username/{username}")
+    @ResponseBody
+    public ResponseEntity<User> getUserById(@PathVariable String username){
+        return new ResponseEntity<>(userService.getUserByUsername(username), HttpStatus.OK);
     }
 
     @PostMapping("/")
     public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO user) {
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{username}")
+    public ResponseEntity<String> deleteUserByUsername(@PathVariable String username) {
+        boolean deleted = userService.deleteUserByUsername(username);
+        if (deleted) {
+            return ResponseEntity.ok("User with username " + username + " has been deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with username: " + username);
+        }
+    }
+
 }

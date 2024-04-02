@@ -1,8 +1,8 @@
 package ba.nwt.keycard.RequestService.models;
 
 import ba.nwt.keycard.RequestService.models.User.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,17 +23,22 @@ public class Team {
     private Long id;
 
     @NotNull
-    @NotBlank(message = "Name of team is  required")
+    @NotBlank(message = "Name of the team is required")
     @Column(unique = true)
     private String name;
 
-    private Long managerId;
+    @OneToOne(mappedBy = "managerTeam")
+    @JsonBackReference
+    private User manager;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
-    @JsonIgnore
-    private List<Request> requests;
+    @PreRemove
+    private void removeManagerTeam() {
+        if (manager != null) {
+            manager.setManagerTeam(null);
+        }
+    }
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "team")
     @JsonIgnore
     private List<User> users;
 
@@ -41,4 +46,8 @@ public class Team {
         this.name = name;
     }
 
+    public Team(String s, User user1) {
+        name = s;
+        manager = user1;
+    }
 }
