@@ -1,5 +1,8 @@
 package ba.nwt.keycard.RoomService.models.Building;
 
+import java.util.List;
+
+import ba.nwt.keycard.RoomService.models.Floor.Floor;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,7 +22,7 @@ public class Building {
     private Long id;
 
     @NotNull(message = "Name must not be null")
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     public void setName(String name) {
@@ -30,11 +33,8 @@ public class Building {
         return this.name;
     }
 
-    // nema potrebe za ovim za sad...
-    // mozda kasnije, ako bude potrebno dohvatati sve spratove u zgradi
-    /*
-     * @OneToMany(mappedBy = "building")
-     * private List<Floor> floors;
-     */
+    // potreban OneToMany zbog Cascade.ALL (ne moze na ManyToOne)
+    @OneToMany(mappedBy = "building", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Floor> floors;
 
 }
