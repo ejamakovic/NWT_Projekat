@@ -22,9 +22,10 @@ class BuildingControllerTests {
     @Transactional
     void testAddBuilding() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/buildings")
+                .post("/api/buildings/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"Building1\"}"))
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
                 .andExpect(status().isOk());
     }
 
