@@ -2,13 +2,15 @@ package ba.nwt.keycard.PermissionService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import ba.nwt.keycard.PermissionService.models.*;
 import ba.nwt.keycard.PermissionService.repositories.*;
 
 @SpringBootApplication
-public class PermissionServiceApplication implements CommandLineRunner{
+@EnableDiscoveryClient
+public class PermissionServiceApplication implements CommandLineRunner {
 
 	@Autowired
 	private PermissionRepository permissionRepository;
