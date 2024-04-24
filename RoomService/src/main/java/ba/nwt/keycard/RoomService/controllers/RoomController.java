@@ -1,5 +1,6 @@
 package ba.nwt.keycard.RoomService.controllers;
 
+import ba.nwt.keycard.RoomService.RibbonProxies.RequestServiceProxy;
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.RoomService.models.Building.Building;
 import ba.nwt.keycard.RoomService.models.Floor.Floor;
@@ -19,10 +20,12 @@ import java.util.List;
 public class RoomController {
 
     private final RoomService roomService;
+    private final RequestServiceProxy requestServiceProxy;
 
     @Autowired
-    public RoomController(RoomService roomService) {
+    public RoomController(RoomService roomService, RequestServiceProxy requestServiceProxy) {
         this.roomService = roomService;
+        this.requestServiceProxy = requestServiceProxy;
     }
 
     @GetMapping
@@ -132,5 +135,11 @@ public class RoomController {
 
         RoomDTO savedRoomDTO = roomService.addRoom(roomDTO);
         return ResponseEntity.ok().body(savedRoomDTO);
+    }
+
+    @GetMapping("/testFeignRequest/{id}")
+    public ResponseEntity<String> testFeignRequest(@PathVariable("id") Long id) {
+        String response = requestServiceProxy.testFeign(id);
+        return ResponseEntity.ok().body(response);
     }
 }
