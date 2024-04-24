@@ -18,6 +18,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
+    @GetMapping("/message")
+    public String test() {
+        return "Hello this is my Second Service";
+    }
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers(){
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
