@@ -12,7 +12,7 @@ spring:
     gateway:
       globalcors:
         corsConfigurations:
-          '[/**]':
+          "[/**]":
             allowedOrigins: "http://localhost:4200"
             allowedHeaders: "*"
             allowedMethods:
@@ -29,9 +29,8 @@ spring:
         - id: roomService
           uri: lb://ROOMSERVICE # Replace with the name of the service registered in Eureka
           predicates:
-            - Path=/room/**
+            - Path=/rs_api/**
         - id: permissionService
           uri: lb://PERMISSIONSERVICE # Replace with the name of the service registered in Eureka
           predicates:
             - Path=/api/**
-
