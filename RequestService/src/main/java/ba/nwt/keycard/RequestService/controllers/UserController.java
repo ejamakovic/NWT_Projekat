@@ -22,7 +22,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping("/message")
     public String test() {
         return "Hello this is my Second Service";
@@ -52,7 +51,7 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserByUsername(username), HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO user) {
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }

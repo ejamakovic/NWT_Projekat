@@ -12,7 +12,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/log")
+@RequestMapping("/user/log")
 public class LogController {
 
     @Autowired
@@ -21,7 +21,7 @@ public class LogController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Log>> getAllLogs(){
         return new ResponseEntity<>(logService.getAllLogs(), HttpStatus.OK);
     }

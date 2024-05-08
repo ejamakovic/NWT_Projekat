@@ -12,13 +12,13 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/keycard")
+@RequestMapping("/user/keycard")
 public class KeycardController {
 
     @Autowired
     private KeycardService keycardService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Keycard>> getAllKeycards(){
         return new ResponseEntity<>(keycardService.getAllKeycards(), HttpStatus.OK);
     }
@@ -29,7 +29,7 @@ public class KeycardController {
         return new ResponseEntity<>(keycardService.getKeycardById(id), HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Keycard> createKeycard(@Valid @RequestBody Keycard keycard){
         return new ResponseEntity<>(keycardService.createKeycard(keycard), HttpStatus.OK);
     }

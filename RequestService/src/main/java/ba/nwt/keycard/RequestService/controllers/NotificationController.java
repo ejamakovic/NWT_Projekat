@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/notification")
+@RequestMapping("/user/notification")
 public class NotificationController {
 
     @Autowired
@@ -21,7 +21,7 @@ public class NotificationController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Notification>> getAllNotifications(){
         return new ResponseEntity<>(notificationService.getAllNotifications(), HttpStatus.OK);
     }

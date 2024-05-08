@@ -33,5 +33,5 @@ spring:
         - id: permissionService
           uri: lb://PERMISSIONSERVICE # Replace with the name of the service registered in Eureka
           predicates:
-            - Path=/permission/**
+            - Path=/api/**
 

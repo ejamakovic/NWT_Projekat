@@ -10,13 +10,13 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/team")
+@RequestMapping("/user/team")
 public class TeamController {
 
     @Autowired
     private TeamService teamService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Team>> getAllTeams(){
         return new ResponseEntity<>(teamService.getAllTeams(), HttpStatus.OK);
     }
@@ -28,7 +28,7 @@ public class TeamController {
         return new ResponseEntity<>(team, HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Team> createTeam(@Valid @RequestBody Team team) {
         return new ResponseEntity<>(teamService.createTeam(team), HttpStatus.OK);
     }
