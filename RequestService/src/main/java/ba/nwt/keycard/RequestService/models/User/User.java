@@ -8,6 +8,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 
@@ -16,7 +21,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements UserInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,9 +67,9 @@ public class User {
     @OneToOne
     private Team managerTeam;
 
-
     @ManyToOne
     private Team team;
+
 
     @AssertTrue(message = "Either managerTeam or team should be present, but not both")
     private boolean isValid() {
@@ -96,5 +101,28 @@ public class User {
                 ", username='" + username + '\'' +
                 // Include other relevant fields but avoid cyclic references
                 '}';
+    }
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Convert the role into a collection of GrantedAuthority objects
+        return List.of(new SimpleGrantedAuthority(role));
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
     }
 }
