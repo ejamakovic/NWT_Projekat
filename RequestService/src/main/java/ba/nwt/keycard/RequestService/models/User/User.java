@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserInterface {
+public class User implements UserInterface, UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -106,6 +107,12 @@ public class User implements UserInterface {
         // Convert the role into a collection of GrantedAuthority objects
         return List.of(new SimpleGrantedAuthority(role));
     }
+
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

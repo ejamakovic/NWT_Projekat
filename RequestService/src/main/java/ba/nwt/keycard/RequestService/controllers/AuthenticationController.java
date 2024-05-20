@@ -25,8 +25,11 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<String> authenticate(@RequestBody LoginUserDto loginUserDto) {
         try {
-            String loginResponse = authenticationService.authenticate(loginUserDto);
-            return ResponseEntity.ok(loginResponse);
+            String loginResponse = String.valueOf(authenticationService.authenticate(loginUserDto));
+            String[] parts = loginResponse.split(",");
+            String tokenPart = parts[0];
+            String token = tokenPart.substring(tokenPart.indexOf("token=") + 6);
+            return ResponseEntity.ok(token);
         } catch (AuthenticationException e) {
             // Handle authentication exception
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
