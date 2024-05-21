@@ -3,3 +3,13 @@ Key Card Management System
 
 # Run debug mode -X
 mvn spring-boot:run -X
+
+# gRPC protoc download & path var setup:
+https://grpc.io/docs/protoc-installation/
+
+# gRPC class generation
+mvn compile -X
+This will generate Java classes in the target/generated-sources/protobuf directory.
+
+# Delete / Clean the maven build
+mvn clean
