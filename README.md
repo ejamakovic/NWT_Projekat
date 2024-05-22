@@ -11,5 +11,7 @@ https://grpc.io/docs/protoc-installation/
 mvn compile -X
 This will generate Java classes in the target/generated-sources/protobuf directory.
 
+# gRPC client import fix: https://github.com/grpc/grpc-java/issues/5990#issuecomment-513208422
+
 # Delete / Clean the maven build
 mvn clean
