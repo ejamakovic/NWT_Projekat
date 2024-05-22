@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.system_events";
+option java_outer_classname = "SystemEventsProto";
+
+package systemevents;
+
+service SystemEvents {
+  rpc GetSystemEvents(SystemEventsRequest) returns (SystemEventsResponse) {}
+}
+
+message SystemEventsRequest {
+    string date = 1;
+    string microservice = 2;
+    string user = 3;
+    string action = 4;
+    string resource = 5;
+    string response = 6;
+}
+
+message SystemEventsResponse {
+    string status = 1;
+}

@@ -2,15 +2,29 @@ package ba.nwt.keycard.api_gateway.Logs;
 
 import java.text.SimpleDateFormat;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
 import org.springframework.web.server.ServerWebExchange;
+
+import com.example.system_events.SystemEventsGrpc;
+import com.example.system_events.SystemEventsRequest;
+import com.example.system_events.SystemEventsResponse;
+
 import reactor.core.publisher.Mono;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 
 public class RequestLoggingFilter implements GlobalFilter, Ordered {
+    private int grpcPort = 6565;
+
+    private final ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)
+            .usePlaintext()
+            .build();
+    private final SystemEventsGrpc.SystemEventsBlockingStub stub = SystemEventsGrpc.newBlockingStub(channel);
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -51,6 +65,21 @@ public class RequestLoggingFilter implements GlobalFilter, Ordered {
         return chain.filter(exchange).then(Mono.fromRunnable(() -> {
             // System.out.println("Response: " + exchange.getResponse().getStatusCode());
             System.out.println("Response: " + exchange.getResponse().getStatusCode().value());
+
+            SystemEventsRequest request = SystemEventsRequest.newBuilder()
+                    .setDate("2022-01-01")
+                    .setMicroservice("api_gateway")
+                    .setUser("user1")
+                    .setAction("action1")
+                    .setResource("resource1")
+                    .setResponse("response1")
+                    .build();
+
+            // System.out.println("Stub: " + stub.toString());
+            SystemEventsResponse response = stub.getSystemEvents(request);
+            System.out.println("Response from gRPC server: " +
+                    response.getStatus());
+
         }));
     }
 
