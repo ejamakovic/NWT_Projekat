@@ -47,11 +47,14 @@ public class SystemEventsApplication {
 
 import io.grpc.Server;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.example.system_events.Services.LogService;
 import com.example.system_events.SystemEventsServer.SystemEventsServerImplementation;
 
 import java.io.IOException;
@@ -64,6 +67,9 @@ public class SystemEventsApplication {
 
 	private Server grpcServer;
 
+	@Autowired
+	private LogService logService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(SystemEventsApplication.class, args);
 	}
@@ -72,7 +78,7 @@ public class SystemEventsApplication {
 	public Server grpcServer() {
 		grpcServer = NettyServerBuilder
 				.forPort(grpcPort)
-				.addService(new SystemEventsServerImplementation())
+				.addService(new SystemEventsServerImplementation(logService))
 				.build();
 
 		// Start the server and block until it is shut down
