@@ -67,12 +67,13 @@ public class RequestLoggingFilter implements GlobalFilter, Ordered {
             System.out.println("Response: " + exchange.getResponse().getStatusCode().value());
 
             SystemEventsRequest request = SystemEventsRequest.newBuilder()
-                    .setDate("2022-01-01")
-                    .setMicroservice("api_gateway")
-                    .setUser("user1")
-                    .setAction("action1")
-                    .setResource("resource1")
-                    .setResponse("response1")
+                    .setDate(date)
+                    .setMicroservice(routeId)
+                    .setUser(user)
+                    .setAction(actionType)
+                    .setResource(exchange.getRequest().getURI().toString())
+                    // convert to string
+                    .setResponse(String.valueOf(exchange.getResponse().getStatusCode().value()))
                     .build();
 
             // System.out.println("Stub: " + stub.toString());
