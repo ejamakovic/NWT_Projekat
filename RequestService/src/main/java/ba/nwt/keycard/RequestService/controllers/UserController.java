@@ -25,7 +25,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
@@ -67,8 +67,8 @@ public class UserController {
 
     @GetMapping("/{userId}/permissions")
     public ResponseEntity<List<String>> getUserPermissions(@PathVariable("userId") Long userId) {
-        Long keycardId = userService.getKeycardByUserId(userId);
-        List<String> permissions = userService.getUserPermissions(keycardId);
+        Long keycardId = userService.getKeycardIdByUserId(userId);
+        List<String> permissions = userService.getUserPermissions(Math.toIntExact(keycardId));
 
         return ResponseEntity.ok(permissions);
     }

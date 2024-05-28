@@ -37,4 +37,7 @@ public class KeycardPermissionService {
                 .map(KeycardPermission::getKeycard)
                 .collect(Collectors.toList());
     }
+
+    public List<Permission> getKeycardPermissionsByKeycardId(Integer keycardId) {
+    }
 }

@@ -1,14 +1,15 @@
 package ba.nwt.keycard.RequestService.clients;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "permissionService")
+@FeignClient("PERMISSIONSERVICE")
 public interface PermissionServiceClient {
 
-    @GetMapping("/api/keycards/{keycardId}/permissions")
-    List<String> getPermissionsByKeycardId(@PathVariable("keycardId") Long keycard);
+    @GetMapping("/api/keycardpermissions/keycard/{keycardId}")
+    public ResponseEntity<?> getPermissionsByKeycardId(@PathVariable("keycardId") Integer keycard);
 }

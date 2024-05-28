@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c7e10c45-f45f-4a4a-9388-c7111b1f93b9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RequestService/src/main/java/ba/nwt/keycard/RequestService/clients/PermissionServiceClient.java" afterDir="false" />
-    </list>
+    <list default="true" id="c7e10c45-f45f-4a4a-9388-c7111b1f93b9" name="Changes" comment="Sinhrona komunikacija izmedu Request i Permission Service." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,7 +51,16 @@
       <workItem from="1716361476311" duration="832000" />
       <workItem from="1716366368563" duration="912000" />
       <workItem from="1716880227121" duration="181000" />
+      <workItem from="1716898320763" duration="88000" />
     </task>
+    <task id="LOCAL−00001" summary="Sinhrona komunikacija izmedu Request i Permission Service.">
+      <option name="closed" value="true" />
+      <created>1716898380365</created>
+      <option name="number" value="LOCAL−00001" />
+      <option name="presentableId" value="LOCAL−00001" />
+      <updated>1716898380365</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -73,5 +76,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Sinhrona komunikacija izmedu Request i Permission Service." />
+    <option name="LAST_COMMIT_MESSAGE" value="Sinhrona komunikacija izmedu Request i Permission Service." />
   </component>
 </project>

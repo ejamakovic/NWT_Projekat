@@ -57,12 +57,12 @@ public class UserService {
         this.permissionServiceClient = permissionServiceClient;
     }
 
-    public List<String> getUserPermissions(Long keycard) {
+    public List<String> getUserPermissions(Integer keycard) {
         return permissionServiceClient.getPermissionsByKeycardId(keycard);
     }
 
-    public String getKeycardByUserId(String userId) {
+    public Long getKeycardIdByUserId(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        return String.valueOf(user.get().getKeycard().getId());
+        return user.get().getKeycard().getId();
     }
 }
