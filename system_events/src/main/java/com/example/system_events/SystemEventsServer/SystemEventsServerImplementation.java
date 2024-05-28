@@ -1,50 +1,80 @@
 package com.example.system_events.SystemEventsServer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.example.system_events.SystemEventsGrpc;
 import com.example.system_events.SystemEventsRequest;
 import com.example.system_events.SystemEventsResponse;
-import com.example.system_events.Services.LogService;
-import com.example.system_events.Models.Log;
-
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
+import org.springframework.beans.factory.annotation.Value;
+
+import java.sql.PreparedStatement;
 
 @GrpcService
 public class SystemEventsServerImplementation extends SystemEventsGrpc.SystemEventsImplBase {
 
-    private final LogService logService;
+    @Value("${spring.datasource.url}")
+    String datasourceUrl;
 
-    @Autowired
-    public SystemEventsServerImplementation(LogService logService) {
-        this.logService = logService;
-    }
+    @Value("${spring.datasource.username}")
+    String username;
+
+    @Value("${spring.datasource.password}")
+    String password;
+
+    private static final String INSERT_LOG_SQL = "INSERT INTO logs" +
+            "  (date, microservice, user, action, resource, response) VALUES " +
+            " (?, ?, ?, ?, ?, ?);";
 
     @Override
     public void getSystemEvents(SystemEventsRequest request, StreamObserver<SystemEventsResponse> responseObserver) {
-        // Save a log
-        System.out.println(request);
 
-        Log log = new Log();
-        log.setDate(request.getDate());
-        log.setMicroservice(request.getMicroservice());
-        log.setUser(request.getUser());
-        log.setAction(request.getAction());
-        log.setResource(request.getResource());
-        log.setResponse(Integer.parseInt(request.getResponse()));
+        // fetch data from request
+        String date = request.getDate();
+        String microservice = request.getMicroservice();
+        String user = request.getUser();
+        String action = request.getAction();
+        String resource = request.getResource();
+        String response = request.getResponse();
 
-        System.out.println("Adding to log to db: " + log.toString());
-        logService.addLog(log);
-        System.out.println("Log added to db");
+        String status = "Success";
 
-        SystemEventsResponse response = SystemEventsResponse.newBuilder()
-                .setStatus("Success")
+        try (Connection connection = DriverManager
+                .getConnection(datasourceUrl, username, password);
+
+                // Create a statement using connection object
+                PreparedStatement preparedStatement = connection.prepareStatement(INSERT_LOG_SQL)) {
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Timestamp timestamp = new Timestamp(dateFormat.parse(date).getTime());
+
+            preparedStatement.setTimestamp(1, timestamp);
+            preparedStatement.setString(2, microservice);
+            preparedStatement.setString(3, user);
+            preparedStatement.setString(4, action);
+            preparedStatement.setString(5, resource);
+            preparedStatement.setString(6, response);
+
+            // Execute the query or update query
+            preparedStatement.executeUpdate();
+
+        } catch (Exception e) {
+            // print exception information
+            e.printStackTrace();
+            status = "Failure";
+        }
+
+        SystemEventsResponse gRPCresponse = SystemEventsResponse.newBuilder()
+                .setStatus(status)
                 .build();
 
-        System.out.println(response);
-
-        responseObserver.onNext(response);
+        responseObserver.onNext(gRPCresponse);
         responseObserver.onCompleted();
     }
 }
