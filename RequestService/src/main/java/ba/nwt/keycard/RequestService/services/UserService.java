@@ -1,5 +1,7 @@
 package ba.nwt.keycard.RequestService.services;
 
+import ba.nwt.keycard.RequestService.clients.PermissionServiceClient;
+import ba.nwt.keycard.RequestService.models.Keycard;
 import ba.nwt.keycard.RequestService.models.User.UserDTO;
 import ba.nwt.keycard.RequestService.models.User.UserMapper;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
@@ -46,5 +48,21 @@ public class UserService {
     public User getUserByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         return user.orElse(null);
+    }
+
+    private final PermissionServiceClient permissionServiceClient;
+
+    @Autowired
+    public UserService(PermissionServiceClient permissionServiceClient) {
+        this.permissionServiceClient = permissionServiceClient;
+    }
+
+    public List<String> getUserPermissions(Long keycard) {
+        return permissionServiceClient.getPermissionsByKeycardId(keycard);
+    }
+
+    public String getKeycardByUserId(String userId) {
+        Optional<User> user = userRepository.findById(userId);
+        return String.valueOf(user.get().getKeycard().getId());
     }
 }

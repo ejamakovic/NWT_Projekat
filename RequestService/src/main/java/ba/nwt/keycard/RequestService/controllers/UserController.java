@@ -19,13 +19,12 @@ public class UserController {
     @Autowired
     Environment environment;
 
+    private final UserService userService;
     @Autowired
-    private UserService userService;
-
-    @GetMapping("/message")
-    public String test() {
-        return "Hello this is my Second Service";
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
+
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
@@ -64,6 +63,14 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with username: " + username);
         }
+    }
+
+    @GetMapping("/{userId}/permissions")
+    public ResponseEntity<List<String>> getUserPermissions(@PathVariable("userId") Long userId) {
+        Long keycardId = userService.getKeycardByUserId(userId);
+        List<String> permissions = userService.getUserPermissions(keycardId);
+
+        return ResponseEntity.ok(permissions);
     }
 
 }
