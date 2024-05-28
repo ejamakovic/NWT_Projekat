@@ -3,6 +3,8 @@ package com.example.system_events.SystemEventsServer;
 import com.example.system_events.SystemEventsGrpc;
 import com.example.system_events.SystemEventsRequest;
 import com.example.system_events.SystemEventsResponse;
+import com.example.system_events.util.PropertiesLoader;
+
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 
@@ -11,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -45,11 +48,18 @@ public class SystemEventsServerImplementation extends SystemEventsGrpc.SystemEve
 
         String status = "Success";
 
-        try (Connection connection = DriverManager
-                .getConnection(datasourceUrl, username, password);
+        try {
 
-                // Create a statement using connection object
-                PreparedStatement preparedStatement = connection.prepareStatement(INSERT_LOG_SQL)) {
+            Properties conf = PropertiesLoader.loadProperties();
+            String datasourceUrl = conf.getProperty("spring.datasource.url");
+            String username = conf.getProperty("spring.datasource.username");
+            String password = conf.getProperty("spring.datasource.password");
+
+            Connection connection = DriverManager
+                    .getConnection(datasourceUrl, username, password);
+
+            // Create a statement using connection object
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_LOG_SQL);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Timestamp timestamp = new Timestamp(dateFormat.parse(date).getTime());
