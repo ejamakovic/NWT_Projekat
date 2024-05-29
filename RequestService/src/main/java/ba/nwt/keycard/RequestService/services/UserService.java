@@ -1,12 +1,12 @@
 package ba.nwt.keycard.RequestService.services;
 
-import ba.nwt.keycard.RequestService.clients.PermissionServiceClient;
-import ba.nwt.keycard.RequestService.models.Keycard;
+import ba.nwt.keycard.RequestService.clients.KeycardPermissionClient;
 import ba.nwt.keycard.RequestService.models.User.UserDTO;
 import ba.nwt.keycard.RequestService.models.User.UserMapper;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
 import ba.nwt.keycard.RequestService.models.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +21,7 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
 
     public List<User> getAllUsers(){
         return userRepository.findAll();
@@ -50,19 +51,19 @@ public class UserService {
         return user.orElse(null);
     }
 
-    private final PermissionServiceClient permissionServiceClient;
+
+    private final KeycardPermissionClient keycardPermissionClient;
 
     @Autowired
-    public UserService(PermissionServiceClient permissionServiceClient) {
-        this.permissionServiceClient = permissionServiceClient;
+    public UserService(KeycardPermissionClient keycardPermissionClient) {
+        this.keycardPermissionClient = keycardPermissionClient;
     }
 
-    public List<String> getUserPermissions(Integer keycard) {
-        return permissionServiceClient.getPermissionsByKeycardId(keycard);
-    }
+    public ResponseEntity<List<?>> getPermissionsByUserId(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        System.out.println(user);
+        Integer keycardId = Math.toIntExact(user.getKeycard().getId());
 
-    public Long getKeycardIdByUserId(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        return user.get().getKeycard().getId();
+        return keycardPermissionClient.getAllPermissionsByKeycardId(keycardId);
     }
 }

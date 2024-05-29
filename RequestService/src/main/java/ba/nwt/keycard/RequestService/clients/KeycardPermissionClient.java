@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient("PERMISSIONSERVICE")
-public interface PermissionServiceClient {
+@FeignClient(name = "PERMISSIONSERVICE")
+public interface KeycardPermissionClient {
 
     @GetMapping("/api/keycardpermissions/keycard/{keycardId}")
-    public ResponseEntity<?> getPermissionsByKeycardId(@PathVariable("keycardId") Integer keycard);
+    ResponseEntity<List<?>> getAllPermissionsByKeycardId(@PathVariable("keycardId") Integer keycardId);
 }

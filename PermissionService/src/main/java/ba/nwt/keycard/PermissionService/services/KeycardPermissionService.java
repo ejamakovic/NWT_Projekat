@@ -38,6 +38,4 @@ public class KeycardPermissionService {
                 .collect(Collectors.toList());
     }
 
-    public List<Permission> getKeycardPermissionsByKeycardId(Integer keycardId) {
-    }
 }

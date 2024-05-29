@@ -11,6 +11,7 @@ import ba.nwt.keycard.PermissionService.services.KeycardPermissionService;
 import ba.nwt.keycard.PermissionService.models.KeycardPermission;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/keycardpermissions")
@@ -30,9 +31,8 @@ public class KeycardPermissionController {
     }
 
     @GetMapping("/keycard/{keycardId}")
-    public ResponseEntity<List<Permission>> getAllKeycardPermissionsByKeycardId(@PathVariable("keycardId") Integer keycardId){
-        List<Permission> keycardPermissions = keycardPermissionService.getKeycardPermissionsByKeycardId(keycardId);
-        return ResponseEntity.ok().body(keycardPermissions);
-
+    public ResponseEntity<List<?>> getAllPermissionsByKeycardId(@PathVariable("keycardId") Integer keycardId){
+        List<Permission> permissions = keycardPermissionService.getPermissionsByKeycardId(keycardId);
+        return ResponseEntity.ok().body(permissions);
     }
 }

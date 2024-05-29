@@ -2,6 +2,7 @@ package ba.nwt.keycard.RequestService.controllers;
 
 import java.util.List;
 
+import ba.nwt.keycard.RequestService.models.Keycard;
 import ba.nwt.keycard.RequestService.models.User.User;
 import ba.nwt.keycard.RequestService.models.User.UserDTO;
 import ba.nwt.keycard.RequestService.services.UserService;
@@ -66,11 +67,8 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/permissions")
-    public ResponseEntity<List<String>> getUserPermissions(@PathVariable("userId") Long userId) {
-        Long keycardId = userService.getKeycardIdByUserId(userId);
-        List<String> permissions = userService.getUserPermissions(Math.toIntExact(keycardId));
-
-        return ResponseEntity.ok(permissions);
+    public ResponseEntity<List<?>> getPermissionsByUserId(@PathVariable("userId") Long userId) {
+        return userService.getPermissionsByUserId(userId);
     }
 
 }
