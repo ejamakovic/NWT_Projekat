@@ -2,7 +2,6 @@ package ba.nwt.keycard.RequestService.controllers;
 
 import java.util.List;
 
-import ba.nwt.keycard.RequestService.models.Keycard;
 import ba.nwt.keycard.RequestService.models.User.User;
 import ba.nwt.keycard.RequestService.models.User.UserDTO;
 import ba.nwt.keycard.RequestService.services.UserService;
