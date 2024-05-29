@@ -1,6 +1,7 @@
 package ba.nwt.keycard.api_gateway.Logs;
 
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -8,8 +9,14 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.web.server.ServerWebExchange;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.system_events.SystemEventsGrpc;
 import com.example.system_events.SystemEventsRequest;
 import com.example.system_events.SystemEventsResponse;
@@ -37,16 +44,46 @@ public class RequestLoggingFilter implements GlobalFilter, Ordered {
         String routeId = route != null ? route.getId() : "unknown";
 
         // user
-        String user = "unknown";
+        final String[] user = new String[1];
+        user[0] = "";
+
+        // token
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            // FINISH LATER
-            /*
-             * String token = authHeader.substring(7);
-             * Claims claims =
-             * Jwts.parser().setSigningKey("secretkey").parseClaimsJws(jwt).getBody();
-             * user = claims.getSubject();
-             */
+            String secretKey = "3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b";
+
+            // validate token
+            String token = authHeader.substring(7);
+            System.out.println("Token: " + token);
+            System.out.println("Secret key: " + secretKey);
+
+            // decode token
+            try {
+                byte[] decodedSecret = Base64.getDecoder().decode(secretKey);
+                Algorithm algorithm = Algorithm.HMAC256(decodedSecret);
+                JWTVerifier verifier = JWT.require(algorithm).build();
+                DecodedJWT decodedToken = verifier.verify(token);
+                System.out.println("Decoded token: " + decodedToken);
+
+                // extract fields from decodedToken
+                String role = decodedToken.getClaim("role").asString();
+                String username = decodedToken.getClaim("sub").asString();
+
+                System.out.println("Role: " + role);
+                System.out.println("Username: " + username);
+
+                user[0] = username;
+            } catch (JWTVerificationException e) {
+                System.out.println("Invalid token " + e.getMessage());
+
+                // Cancel the request and set the message to: "Malformed token"
+                exchange.getResponse().setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
+                // Add the message: "Malformed token" to the response
+                exchange.getResponse().getHeaders().add("Content-Type", "application/json");
+                DataBuffer buffer = exchange.getResponse().bufferFactory().wrap("Malformed token".getBytes());
+                return exchange.getResponse().writeWith(Mono.just(buffer));
+            }
+
         }
 
         // action type
@@ -54,7 +91,7 @@ public class RequestLoggingFilter implements GlobalFilter, Ordered {
 
         System.out.println("Date: " + date);
         System.out.println("Microservice: " + routeId);
-        System.out.println("User: " + user);
+        System.out.println("User: " + user[0]);
         System.out.println("Action: " + actionType);
         System.out.println("Resource: " + exchange.getRequest().getURI());
 
@@ -69,7 +106,7 @@ public class RequestLoggingFilter implements GlobalFilter, Ordered {
             SystemEventsRequest request = SystemEventsRequest.newBuilder()
                     .setDate(date)
                     .setMicroservice(routeId)
-                    .setUser(user)
+                    .setUser(user[0])
                     .setAction(actionType)
                     .setResource(exchange.getRequest().getURI().toString())
                     // convert to string
