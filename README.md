@@ -15,3 +15,9 @@ This will generate Java classes in the target/generated-sources/protobuf directo
 
 # Delete / Clean the maven build
 mvn clean
+
+# Compile project to .jar
+mvn clean install -DskipTests
+
+# Docker build
+docker-compose up --build
