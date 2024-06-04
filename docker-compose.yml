@@ -1,0 +1,134 @@
+version: '3.9'
+
+services:
+  eureka:
+    image: "eureka"
+    container_name: eureka
+    build:
+      dockerfile: Dockerfile
+      context: ./EurekaServer
+    networks:
+      - nwt_network
+    ports:
+      - "8761:8761"
+
+  nwt_central_config:
+    image: "nwt_central_config"
+    container_name: nwt_central_config
+    networks:
+      - nwt_network
+    build:
+      dockerfile: Dockerfile
+      context: ./ConfigServer
+    depends_on:
+      - eureka
+    ports:
+      - "8888:8888"
+
+  system_events:
+    image: "system_events"
+    container_name: system_events
+    restart: on-failure
+    networks:
+      - nwt_network
+    build:
+      dockerfile: Dockerfile
+      context: ./system_events
+    depends_on:
+      - eureka
+      - nwt_api_gateway
+      - nwt_central_config
+    ports:
+      - "8081:8081"
+
+  nwt_api_gateway:
+    image: "nwt_api_gateway"
+    container_name: nwt_api_gateway
+    build:
+      dockerfile: Dockerfile
+      context: ./api_gateway
+    networks:
+      - nwt_network
+    depends_on:
+      - eureka
+    ports:
+      - "8080:8080"
+
+  nwt_project_request:
+    image: "nwt_project_request"
+    container_name: nwt_project_request
+    restart: on-failure
+    networks:
+      - nwt_network
+    build:
+      dockerfile: Dockerfile
+      context: ./RequestService
+    depends_on:
+      - eureka
+      - nwt_central_config
+      - nwt_api_gateway
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/RequestServiceDB?sslMode=REQUIRED
+      - SPRING_DATASOURCE_USERNAME=doadmin
+      - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
+    ports:
+      - "8082:8082"
+
+  nwt_project_room:
+    image: "nwt_project_room"
+    container_name: nwt_project_room
+    restart: on-failure
+    networks:
+      - nwt_network
+    build:
+      dockerfile: Dockerfile
+      context: ./RoomService
+    depends_on:
+      - eureka
+      - nwt_central_config
+      - nwt_api_gateway
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/RoomServiceDB?sslMode=REQUIRED
+      - SPRING_DATASOURCE_USERNAME=doadmin
+      - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
+
+
+  nwt_project_permission:
+    image: "nwt_project_permission"
+    container_name: nwt_project_permission
+    restart: on-failure
+    networks:
+      - nwt_network
+    build:
+      dockerfile: Dockerfile
+      context: ./PermissionService
+    depends_on:
+      - eureka
+      - nwt_central_config
+      - nwt_api_gateway
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/PermissionServiceDB?sslMode=REQUIRED
+      - SPRING_DATASOURCE_USERNAME=doadmin
+      - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
+
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - nwt_network
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+networks:
+  nwt_network:
+    external: true
