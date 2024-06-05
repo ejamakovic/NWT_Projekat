@@ -12,9 +12,9 @@ services:
     ports:
       - "8761:8761"
 
-  nwt_central_config:
-    image: "nwt_central_config"
-    container_name: nwt_central_config
+  nwt_config:
+    image: "nwt_config"
+    container_name: nwt_config
     networks:
       - nwt_network
     build:
@@ -37,7 +37,7 @@ services:
     depends_on:
       - eureka
       - nwt_api_gateway
-      - nwt_central_config
+      - nwt_config
     ports:
       - "8081:8081"
 
@@ -51,6 +51,7 @@ services:
       - nwt_network
     depends_on:
       - eureka
+      - nwt_config
     ports:
       - "8080:8080"
 
@@ -65,8 +66,8 @@ services:
       context: ./RequestService
     depends_on:
       - eureka
-      - nwt_central_config
       - nwt_api_gateway
+      - nwt_config
       - rabbitmq
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/RequestServiceDB?sslMode=REQUIRED
@@ -86,7 +87,7 @@ services:
       context: ./RoomService
     depends_on:
       - eureka
-      - nwt_central_config
+      - nwt_config
       - nwt_api_gateway
     ports:
       - "8083:8083"
@@ -107,7 +108,7 @@ services:
       context: ./PermissionService
     depends_on:
       - eureka
-      - nwt_central_config
+      - nwt_config
       - nwt_api_gateway
     ports:
       - "8084:8084"

@@ -1,24 +1,12 @@
-#FROM amazoncorretto:11-alpine-jdk
-FROM eclipse-temurin:17-jdk-alpine as build
-WORKDIR /NWT_Projekat/ConfigServer
-
-COPY mvnw .
-COPY .mvn .mvn
+# Stage 1: Build the JAR
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+WORKDIR /app
 COPY pom.xml .
-COPY src src
+COPY src ./src
+RUN mvn clean install -DskipTests
 
-RUN ./mvnw clean install -DskipTests
-
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
-#COPY --from=ghcr.io/ufoscout/docker-compose-wait:latest /wait /wait
-#
-#COPY entrypoint.sh /srvc/entrypoint.sh
-#
-#ENTRYPOINT ["/bin/sh", "/srvc/entrypoint.sh"]
-
-
-FROM eclipse-temurin:21-jdk-alpine
-VOLUME /tmp
-COPY target/*.jar ConfigServer.jar
-#CMD /wait
-ENTRYPOINT ["java","-jar","/ConfigServer.jar"]
+# Stage 2: Run the application
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar ConfigServer.jar
+ENTRYPOINT ["java", "-jar", "ConfigServer.jar"]
