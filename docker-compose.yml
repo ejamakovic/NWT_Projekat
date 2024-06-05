@@ -37,7 +37,10 @@ services:
     depends_on:
       - eureka
       - nwt_api_gateway
-      - nwt_config
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/System_Events?sslMode=REQUIRED
+      - SPRING_DATASOURCE_USERNAME=doadmin
+      - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
     ports:
       - "8081:8081"
 
