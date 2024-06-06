@@ -1,9 +1,14 @@
 version: '3.9'
 
+networks:
+  nwt_network:
+    external: true
+
 services:
-  eureka:
-    image: "eureka"
-    container_name: eureka
+  eureka-server:
+    image: "eureka-server"
+    container_name: eureka-server
+    restart: on-failure
     build:
       dockerfile: Dockerfile
       context: ./EurekaServer
@@ -12,22 +17,39 @@ services:
     ports:
       - "8761:8761"
 
-  nwt_config:
-    image: "nwt_config"
-    container_name: nwt_config
+  config-server:
+    image: "config-server"
+    container_name: config-server
+    restart: on-failure
     networks:
       - nwt_network
     build:
       dockerfile: Dockerfile
       context: ./ConfigServer
-    depends_on:
-      - eureka
     ports:
       - "8888:8888"
 
-  system_events:
-    image: "system_events"
-    container_name: system_events
+  api-gateway:
+    image: "api-gateway"
+    container_name: api-gateway
+    restart: on-failure
+    build:
+      dockerfile: Dockerfile
+      context: ./api_gateway
+    depends_on:
+      - eureka-server
+      - config-server
+    environment:
+      - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
+      - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
+    ports:
+      - "8080:8080"
+    networks:
+      - nwt_network
+
+  system-events:
+    image: "system-events"
+    container_name: system-events
     restart: on-failure
     networks:
       - nwt_network
@@ -35,32 +57,20 @@ services:
       dockerfile: Dockerfile
       context: ./system_events
     depends_on:
-      - eureka
-      - nwt_api_gateway
+      - eureka-server
+      - config-server
+      - api-gateway
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/System_Events?sslMode=REQUIRED
       - SPRING_DATASOURCE_USERNAME=doadmin
       - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
+      - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
     ports:
-      - "8081:8081"
+      - "6565:6565"
 
-  nwt_api_gateway:
-    image: "nwt_api_gateway"
-    container_name: nwt_api_gateway
-    build:
-      dockerfile: Dockerfile
-      context: ./api_gateway
-    networks:
-      - nwt_network
-    depends_on:
-      - eureka
-      - nwt_config
-    ports:
-      - "8080:8080"
-
-  nwt_project_request:
-    image: "nwt_project_request"
-    container_name: nwt_project_request
+  request-service:
+    image: "request-service"
+    container_name: request-service
     restart: on-failure
     networks:
       - nwt_network
@@ -68,20 +78,20 @@ services:
       dockerfile: Dockerfile
       context: ./RequestService
     depends_on:
-      - eureka
-      - nwt_api_gateway
-      - nwt_config
+      - eureka-server
+      - config-server
+      - api-gateway
       - rabbitmq
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/RequestServiceDB?sslMode=REQUIRED
       - SPRING_DATASOURCE_USERNAME=doadmin
       - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
-    ports:
-      - "8082:8082"
+      - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
+      - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
 
-  nwt_project_room:
-    image: "nwt_project_room"
-    container_name: nwt_project_room
+  room-service:
+    image: "room-service"
+    container_name: room-service
     restart: on-failure
     networks:
       - nwt_network
@@ -89,20 +99,20 @@ services:
       dockerfile: Dockerfile
       context: ./RoomService
     depends_on:
-      - eureka
-      - nwt_config
-      - nwt_api_gateway
-    ports:
-      - "8083:8083"
+      - eureka-server
+      - config-server
+      - api-gateway
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/RoomServiceDB?sslMode=REQUIRED
       - SPRING_DATASOURCE_USERNAME=doadmin
       - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
+      - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
+      - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
 
 
-  nwt_project_permission:
-    image: "nwt_project_permission"
-    container_name: nwt_project_permission
+  permission-service:
+    image: "permission-service"
+    container_name: permission-service
     restart: on-failure
     networks:
       - nwt_network
@@ -110,20 +120,21 @@ services:
       dockerfile: Dockerfile
       context: ./PermissionService
     depends_on:
-      - eureka
-      - nwt_config
-      - nwt_api_gateway
-    ports:
-      - "8084:8084"
+      - eureka-server
+      - config-server
+      - api-gateway
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/PermissionServiceDB?sslMode=REQUIRED
       - SPRING_DATASOURCE_USERNAME=doadmin
       - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
+      - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
+      - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
 
 
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
+    restart: on-failure
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
@@ -133,6 +144,3 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-networks:
-  nwt_network:
-    external: true
