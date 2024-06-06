@@ -1,85 +1,74 @@
-version: '3.9'
 
 networks:
   nwt_network:
     external: true
+    driver: bridge
 
 services:
   eureka-server:
-    image: "eureka-server"
     container_name: eureka-server
-    restart: on-failure
+    image: "eureka-server"
     build:
-      dockerfile: Dockerfile
       context: ./EurekaServer
+      dockerfile: Dockerfile
+    restart: on-failure
     networks:
       - nwt_network
     ports:
       - "8761:8761"
 
   config-server:
-    image: "config-server"
     container_name: config-server
+    image: "config-server"
+    build:
+      context: ./ConfigServer
+      dockerfile: Dockerfile
     restart: on-failure
     networks:
       - nwt_network
-    build:
-      dockerfile: Dockerfile
-      context: ./ConfigServer
     ports:
       - "8888:8888"
 
   api-gateway:
-    image: "api-gateway"
     container_name: api-gateway
-    restart: on-failure
+    image: "api-gateway"
     build:
-      dockerfile: Dockerfile
       context: ./api_gateway
+      dockerfile: Dockerfile
+    restart: on-failure
     depends_on:
       - eureka-server
       - config-server
     environment:
       - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
       - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
-      - REQUEST_SERVICE_URI=lb://REQUEST-SERVICE
-      - ROOM_SERVICE_URI=lb://ROOM-SERVICE
-      - PERMISSION_SERVICE_URI=lb://PERMISSION-SERVICE
     ports:
       - "8080:8080"
     networks:
       - nwt_network
 
   system-events:
-    image: "system-events"
     container_name: system-events
-    restart: on-failure
-    networks:
-      - nwt_network
+    image: "system-events"
     build:
-      dockerfile: Dockerfile
       context: ./system_events
+      dockerfile: Dockerfile
+    restart: on-failure
     depends_on:
       - eureka-server
-      - config-server
       - api-gateway
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/System_Events?sslMode=REQUIRED
-      - SPRING_DATASOURCE_USERNAME=doadmin
-      - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
-      - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
     ports:
       - "6565:6565"
-
-  request-service:
-    image: "request-service"
-    container_name: request-service
-    restart: on-failure
     networks:
       - nwt_network
+
+  request-service:
+    container_name: request-service
+    image: "request-service"
     build:
-      dockerfile: Dockerfile
       context: ./RequestService
+      dockerfile: Dockerfile
+    restart: on-failure
     depends_on:
       - eureka-server
       - config-server
@@ -91,16 +80,16 @@ services:
       - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
       - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
       - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
-
-  room-service:
-    image: "room-service"
-    container_name: room-service
-    restart: on-failure
     networks:
       - nwt_network
+
+  room-service:
+    container_name: room-service
+    image: "room-service"
     build:
-      dockerfile: Dockerfile
       context: ./RoomService
+      dockerfile: Dockerfile
+    restart: on-failure
     depends_on:
       - eureka-server
       - config-server
@@ -111,17 +100,16 @@ services:
       - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
       - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
       - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
-
-
-  permission-service:
-    image: "permission-service"
-    container_name: permission-service
-    restart: on-failure
     networks:
       - nwt_network
+
+  permission-service:
+    container_name: permission-service
+    image: "permission-service"
     build:
-      dockerfile: Dockerfile
       context: ./PermissionService
+      dockerfile: Dockerfile
+    restart: on-failure
     depends_on:
       - eureka-server
       - config-server
@@ -132,11 +120,12 @@ services:
       - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
       - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
       - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
-
+    networks:
+      - nwt_network
 
   rabbitmq:
-    image: rabbitmq:management
     container_name: rabbitmq
+    image: rabbitmq:management
     restart: on-failure
     environment:
       - RABBITMQ_DEFAULT_USER=guest
@@ -146,4 +135,3 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-
