@@ -12,7 +12,7 @@ def run():
 
     # Create a valid request message
     request = SystemEventsRequest(
-        date="2022-01-01",
+        date="2024-05-28 13:12:38",
         microservice="service1",
         user="user1",
         action="action1",
