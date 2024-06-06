@@ -42,6 +42,9 @@ services:
     environment:
       - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
       - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
+      - REQUEST_SERVICE_URI=lb://REQUEST-SERVICE
+      - ROOM_SERVICE_URI=lb://ROOM-SERVICE
+      - PERMISSION_SERVICE_URI=lb://PERMISSION-SERVICE
     ports:
       - "8080:8080"
     networks:
