@@ -25,13 +25,29 @@ import reactor.core.publisher.Mono;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-public class RequestLoggingFilter implements GlobalFilter, Ordered {
-    private int grpcPort = 6565;
+import javax.annotation.PostConstruct;
 
-    private final ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", grpcPort)
-            .usePlaintext()
-            .build();
-    private final SystemEventsGrpc.SystemEventsBlockingStub stub = SystemEventsGrpc.newBlockingStub(channel);
+public class RequestLoggingFilter implements GlobalFilter, Ordered {
+
+
+    @Value("${grpc.server.address}")
+    private String grpcAddress;
+
+    @Value("${grpc.server.port}")
+    private int grpcPort;
+
+
+    private ManagedChannel channel;
+    private SystemEventsGrpc.SystemEventsBlockingStub stub;
+
+    @PostConstruct
+    private void initGrpcClient() {
+        this.channel = ManagedChannelBuilder.forAddress(grpcAddress, grpcPort)
+                .usePlaintext()
+                .build();
+        this.stub = SystemEventsGrpc.newBlockingStub(channel);
+    }
+
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

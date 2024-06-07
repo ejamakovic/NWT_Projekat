@@ -42,6 +42,8 @@ services:
     environment:
       - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
       - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
+      - GRPC_SERVER_ADDRESS=system-events
+      - GRPC_SERVER_PORT=6565
     ports:
       - "8080:8080"
     networks:
