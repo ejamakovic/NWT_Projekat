@@ -83,7 +83,7 @@ public class UserService {
         return null;
     }
 
-    public Long getUserIdByCardId(Long keycardId) {
-        return userRepository.getUserIdByCardId(keycardId);
-    }
+//    public Long getUserIdByCardId(Long keycardId) {
+//        return userRepository.getUserIdByCardId(keycardId);
+//    }
 }

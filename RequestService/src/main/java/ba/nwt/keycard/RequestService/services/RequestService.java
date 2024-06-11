@@ -35,8 +35,14 @@ public class RequestService {
         Optional<User> userOptional = userRepository.findById(requestDTO.getUserId());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            Request request = new Request(requestDTO.getRoomId(), user);
-            return requestRepository.save(request);
+            Optional<?> roomOptional = roomClient.getRoomById(requestDTO.getRoomId());
+            if(roomOptional.isPresent()) {
+                Request request = new Request(requestDTO.getRoomId(), user);
+                return requestRepository.save(request);
+            }
+            else{
+                throw new IllegalArgumentException("Room with ID " + requestDTO.getRoomId() + " does not exist.");
+            }
         } else {
             throw new IllegalArgumentException("User with ID " + requestDTO.getUserId() + " does not exist.");
         }
@@ -65,7 +71,6 @@ public class RequestService {
                     .stream()
                     .map(Request::getRoomId)
                     .collect(Collectors.toList());
-            System.out.println(roomIds);
             return roomClient.fetchRoomsByIds(roomIds);
     }
 }
