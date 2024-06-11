@@ -1,12 +1,14 @@
 package ba.nwt.keycard.RoomService.repositories;
 
 import ba.nwt.keycard.RoomService.models.Floor.Floor;
+import ba.nwt.keycard.RoomService.models.Room.FullRoomDTO;
 import ba.nwt.keycard.RoomService.models.Room.Room;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
