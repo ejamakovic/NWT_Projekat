@@ -1,12 +1,10 @@
 package ba.nwt.keycard.RequestService.models.User;
 
 import ba.nwt.keycard.RequestService.models.*;
+import ba.nwt.keycard.RequestService.models.Request.Request;
 import ba.nwt.keycard.RequestService.models.Team.Team;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +23,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User implements UserInterface, UserDetails {
 
     @Id

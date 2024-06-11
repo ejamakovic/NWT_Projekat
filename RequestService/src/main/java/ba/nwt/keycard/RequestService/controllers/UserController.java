@@ -32,7 +32,7 @@ public class UserController {
 
     @GetMapping("/id/{id}")
     @ResponseBody
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
@@ -67,7 +67,17 @@ public class UserController {
 
     @GetMapping("/{userId}/permissions")
     public ResponseEntity<List<?>> getPermissionsByUserId(@PathVariable("userId") Long userId) {
-        return userService.getPermissionsByUserId(userId);
+        return new ResponseEntity<>(userService.getPermissionsByUserId(userId), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/team")
+    public ResponseEntity<User> setUserTeamId(@PathVariable("id") Long userId, @RequestBody Long teamId) {
+        User updatedUser = userService.setUserTeamId(userId, teamId);
+        if (updatedUser != null) {
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }
