@@ -1,11 +1,10 @@
-package ba.nwt.keycard.RequestService.models;
+package ba.nwt.keycard.RequestService.models.Team;
 
 import ba.nwt.keycard.RequestService.models.User.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,24 +21,19 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @NotBlank(message = "Name of the team is required")
     @Column(unique = true)
     private String name;
 
-    @OneToOne(mappedBy = "managerTeam")
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
     @JsonBackReference
     private User manager;
 
-    @PreRemove
-    private void removeManagerTeam() {
-        if (manager != null) {
-            manager.setManagerTeam(null);
-        }
-    }
 
-    @OneToMany(mappedBy = "team")
-    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    //@JsonIgnore
     private List<User> users;
 
     public Team(String name) {

@@ -1,6 +1,7 @@
 package ba.nwt.keycard.RequestService.controllers;
 
-import ba.nwt.keycard.RequestService.models.Team;
+import ba.nwt.keycard.RequestService.models.Team.Team;
+import ba.nwt.keycard.RequestService.models.Team.TeamDTO;
 import ba.nwt.keycard.RequestService.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,8 @@ public class TeamController {
     }
 
     @PostMapping
-    public ResponseEntity<Team> createTeam(@Valid @RequestBody Team team) {
-        return new ResponseEntity<>(teamService.createTeam(team), HttpStatus.OK);
+    public ResponseEntity<Team> createTeam(@Valid @RequestBody TeamDTO teamDTO) {
+        return new ResponseEntity<>(teamService.createTeam(teamDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

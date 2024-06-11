@@ -1,7 +1,10 @@
 package ba.nwt.keycard.RequestService.models.User;
 
 import ba.nwt.keycard.RequestService.models.*;
+import ba.nwt.keycard.RequestService.models.Team.Team;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
@@ -65,17 +68,14 @@ public class User implements UserInterface, UserDetails {
     @JoinColumn(name = "keycard_id")
     private Keycard keycard;
 
-    @OneToOne
-    private Team managerTeam;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "manager", orphanRemoval = true)
+    @JsonManagedReference
+    private List<Team> teams;
 
     @ManyToOne
+    @JoinColumn(name = "team_id")
+    @JsonBackReference
     private Team team;
-
-
-    @AssertTrue(message = "Either managerTeam or team should be present, but not both")
-    private boolean isValid() {
-        return (managerTeam == null && team != null) || (managerTeam != null && team == null) || (managerTeam == null && team == null);
-    }
 
     public User(String username, String email, String password, String role, Boolean active) {
         this.username = username;
@@ -94,6 +94,7 @@ public class User implements UserInterface, UserDetails {
         this.keycard = keycard;
         this.team = team;
     }
+
 
     @Override
     public String toString() {

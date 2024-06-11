@@ -1,7 +1,7 @@
 package ba.nwt.keycard.RequestService.models;
 
+import ba.nwt.keycard.RequestService.models.Team.Team;
 import ba.nwt.keycard.RequestService.models.User.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

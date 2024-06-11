@@ -1,7 +1,10 @@
 package ba.nwt.keycard.RequestService.services;
 
-import ba.nwt.keycard.RequestService.models.Team;
+import ba.nwt.keycard.RequestService.models.Team.Team;
+import ba.nwt.keycard.RequestService.models.Team.TeamDTO;
+import ba.nwt.keycard.RequestService.models.User.User;
 import ba.nwt.keycard.RequestService.repositories.TeamRepository;
+import ba.nwt.keycard.RequestService.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,8 +13,12 @@ import java.util.Optional;
 
 @Service
 public class TeamService {
+
     @Autowired
     private TeamRepository teamRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Team> getAllTeams(){ return teamRepository.findAll();}
 
@@ -20,9 +27,19 @@ public class TeamService {
         return team.orElse(null);
     }
 
-    public Team createTeam(Team team){
-        teamRepository.save(team);
-        return team;
+    public Team createTeam(TeamDTO teamDTO) {
+        Team team = new Team();
+        team.setName(teamDTO.getName());
+        User manager = null;
+        if (teamDTO.getManagerId() != null) {
+            Optional<User> managerOptional = userRepository.findById(teamDTO.getManagerId());
+            manager = managerOptional.get();
+            if (!managerOptional.isPresent()) {
+                throw new IllegalArgumentException("Manager with ID " + teamDTO.getManagerId() + " does not exist.");
+            }
+            team.setManager(manager);
+        }
+        return teamRepository.save(team);
     }
 
     public boolean deleteTeamById(Long id) {
