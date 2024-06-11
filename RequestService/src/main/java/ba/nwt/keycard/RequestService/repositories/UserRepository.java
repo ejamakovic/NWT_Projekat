@@ -3,6 +3,7 @@ package ba.nwt.keycard.RequestService.repositories;
 import ba.nwt.keycard.RequestService.models.User.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -15,6 +16,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByEmail(String email);
 
-    @Query("SELECT u.id FROM User u WHERE u.keycard_id = :keycardId")
-    Long getUserIdByCardId(Long keycardId);
+    /*
+     * @Query("SELECT u.id FROM User u WHERE u.keycard_id = :keycardId")
+     * Long getUserIdByCardId(@Param("keycardId") Long keycardId);
+     */
 }
