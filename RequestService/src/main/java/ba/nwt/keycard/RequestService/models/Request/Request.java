@@ -1,8 +1,10 @@
 package ba.nwt.keycard.RequestService.models.Request;
 
-import ba.nwt.keycard.RequestService.models.Team.Team;
 import ba.nwt.keycard.RequestService.models.User.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -14,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Request {
 
     @Id
@@ -25,7 +28,6 @@ public class Request {
 
     @ManyToOne
     @NotNull(message = "Request must have userId")
-    @JsonBackReference
     private User user;
 
     public Request(Long roomId, User user) {

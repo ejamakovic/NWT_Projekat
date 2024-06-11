@@ -47,20 +47,20 @@ public class User implements UserInterface, UserDetails {
     @NotNull
     private Boolean active;
 
-    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
     @JsonIgnore
-    private Set<Request> requests;
+    //@JsonManagedReference
+    private List<Request> requests;
 
-    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
     @JsonIgnore
-    private Set<Log> logs;
+    //@JsonManagedReference
+    private List<Log> logs;
 
-    //@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
     @JsonIgnore
-    private Set<Notification> notifications;
+    //@JsonManagedReference
+    private List<Notification> notifications;
 
     //@OneToOne(cascade = CascadeType.ALL)
     @OneToOne

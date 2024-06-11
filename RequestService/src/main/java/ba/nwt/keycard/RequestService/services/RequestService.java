@@ -52,8 +52,13 @@ public class RequestService {
         return false;
     }
 
+
+    private final RoomClient roomClient;
+
     @Autowired
-    private RoomClient roomClient;
+    public RequestService(RoomClient roomClient){
+        this.roomClient = roomClient;
+    }
 
     public List<?> getAllRoomsForUser(Long userId) {
             List<Long> roomIds = requestRepository.findByUser_Id(userId)
