@@ -69,12 +69,11 @@ public class User implements UserInterface, UserDetails {
     private Keycard keycard;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "manager", orphanRemoval = true)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Team> teams;
 
     @ManyToOne
     @JoinColumn(name = "team_id")
-    @JsonBackReference
     private Team team;
 
     public User(String username, String email, String password, String role, Boolean active) {

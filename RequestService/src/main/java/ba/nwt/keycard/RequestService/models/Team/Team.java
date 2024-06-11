@@ -2,6 +2,7 @@ package ba.nwt.keycard.RequestService.models.Team;
 
 import ba.nwt.keycard.RequestService.models.User.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -27,13 +28,11 @@ public class Team {
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
-    @JsonBackReference
     private User manager;
 
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    //@JsonIgnore
+    @JsonIgnore
     private List<User> users;
 
     public Team(String name) {
