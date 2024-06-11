@@ -11,5 +11,5 @@ import java.util.List;
 public interface KeycardPermissionClient {
 
     @GetMapping("/api/keycardpermissions/keycard/{keycardId}")
-    ResponseEntity<List<?>> getAllPermissionsByKeycardId(@PathVariable("keycardId") Integer keycardId);
+    List<?> getAllPermissionsByKeycardId(@PathVariable("keycardId") Integer keycardId);
 }

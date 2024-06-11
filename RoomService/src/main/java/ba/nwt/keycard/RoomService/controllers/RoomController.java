@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/rs_api/rooms")
@@ -158,5 +159,13 @@ public class RoomController {
     public ResponseEntity<String> testFeignRequest(@PathVariable("id") Long id) {
         String response = requestServiceProxy.testFeign(id);
         return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/user")
+    public ResponseEntity<List<RoomDTO>> getAllRoomsFromUser(@RequestBody List<Long> roomsIds){
+        List<RoomDTO> rooms = roomsIds.stream()
+                .map(roomService::getRoomById)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(rooms);
     }
 }

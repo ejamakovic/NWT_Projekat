@@ -24,7 +24,7 @@ public class TeamController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Team> getTeamById(@PathVariable Long id){
+    public ResponseEntity<Team> getTeamById(@PathVariable("id") Long id){
         Team team = teamService.getTeamById(id);
         return new ResponseEntity<>(team, HttpStatus.OK);
     }
@@ -35,7 +35,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTeam(@PathVariable Long id) {
+    public ResponseEntity<String> deleteTeam(@PathVariable("id") Long id) {
         boolean deleted = teamService.deleteTeamById(id);
         if (deleted) {
             return ResponseEntity.ok("Team with id " + id + " has been deleted successfully.");

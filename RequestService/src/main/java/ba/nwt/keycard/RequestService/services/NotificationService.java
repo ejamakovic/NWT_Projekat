@@ -1,7 +1,6 @@
 package ba.nwt.keycard.RequestService.services;
 
 import ba.nwt.keycard.RequestService.models.Notification;
-import ba.nwt.keycard.RequestService.models.Request;
 import ba.nwt.keycard.RequestService.repositories.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
