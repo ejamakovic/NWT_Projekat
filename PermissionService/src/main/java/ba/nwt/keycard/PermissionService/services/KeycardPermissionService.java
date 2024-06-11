@@ -21,6 +21,18 @@ public class KeycardPermissionService {
         this.keycardPermissionRepository = keycardPermissionRepository;
     }
 
+    public Boolean checkPermission(Integer keycardId, Integer buildingId, Integer floorId, Integer roomId) {
+        List<KeycardPermission> keycardPermissions = keycardPermissionRepository.findByKeycardId(keycardId);
+        for (KeycardPermission keycardPermission : keycardPermissions) {
+            if (keycardPermission.getPermission().getBuildingId().equals(buildingId)
+                    || keycardPermission.getPermission().getFloorId().equals(floorId)
+                    || keycardPermission.getPermission().getRoomId().equals(roomId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<KeycardPermission> getAllKeycardPermissions() {
         LOGGER.info("Fetching all keycard permissions");
         return keycardPermissionRepository.findAll();

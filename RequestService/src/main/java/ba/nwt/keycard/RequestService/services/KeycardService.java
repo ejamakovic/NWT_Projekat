@@ -13,17 +13,16 @@ public class KeycardService {
     @Autowired
     private KeycardRepository keycardRepository;
 
-
-    public List<Keycard> getAllKeycards(){
+    public List<Keycard> getAllKeycards() {
         return keycardRepository.findAll();
     }
 
-    public Keycard getKeycardById(Long id){
+    public Keycard getKeycardById(Long id) {
         Optional<Keycard> keycard = keycardRepository.findById(id);
         return keycard.orElse(null);
     }
 
-    public Keycard createKeycard(Keycard keycard){
+    public Keycard createKeycard(Keycard keycard) {
         return keycardRepository.save(keycard);
     }
 

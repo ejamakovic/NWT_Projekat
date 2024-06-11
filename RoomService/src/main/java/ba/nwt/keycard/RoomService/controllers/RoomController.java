@@ -4,7 +4,8 @@ import ba.nwt.keycard.RoomService.RibbonProxies.RequestServiceProxy;
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.RoomService.models.Building.Building;
 import ba.nwt.keycard.RoomService.models.Floor.Floor;
-import ba.nwt.keycard.RoomService.models.PermissionDTOs.PermissionDTO;
+import ba.nwt.keycard.RoomService.models.PermissionServiceDTOs.PermissionDTO;
+import ba.nwt.keycard.RoomService.models.RequestServiceDTOs.LogDTO;
 import ba.nwt.keycard.RoomService.models.Room.FullRoomDTO;
 import ba.nwt.keycard.RoomService.models.Room.Room;
 import ba.nwt.keycard.RoomService.models.Room.RoomDTO;
@@ -40,6 +41,14 @@ public class RoomController {
     public ResponseEntity<List<FullRoomDTO>> getRoomsWithKeycard(@PathVariable("keycardId") Long keycardId) {
         List<FullRoomDTO> fullRoomDTOs = roomService.getRoomsWithKeycard(keycardId);
         return ResponseEntity.ok().body(fullRoomDTOs);
+    }
+
+    @PostMapping("/enterRoom/{roomId}/keycard/{keycardId}")
+    public ResponseEntity<LogDTO> enterRoom(@PathVariable("roomId") Long roomId,
+            @PathVariable("keycardId") Long keycardId, @RequestBody String entryType) {
+        // entry type = in or out
+        LogDTO response = roomService.enterRoom(roomId, keycardId, entryType);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{id}")

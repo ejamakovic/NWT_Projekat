@@ -2,6 +2,7 @@ package ba.nwt.keycard.RequestService.controllers;
 
 import ba.nwt.keycard.RequestService.models.Log;
 import ba.nwt.keycard.RequestService.models.User.User;
+import ba.nwt.keycard.RequestService.models.dtos.LogDTO;
 import ba.nwt.keycard.RequestService.services.LogService;
 import ba.nwt.keycard.RequestService.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,21 +23,19 @@ public class LogController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<Log>> getAllLogs(){
+    public ResponseEntity<List<Log>> getAllLogs() {
         return new ResponseEntity<>(logService.getAllLogs(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Log> getLogById(@PathVariable Long id){
+    public ResponseEntity<Log> getLogById(@PathVariable Long id) {
         return new ResponseEntity<>(logService.getLogById(id), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<Log> createRequest(@Valid @RequestBody Log log, @PathVariable Long id){
-        User user = userService.getUserById(id);
-        log.setUser(user);
-        return new ResponseEntity<>(logService.createLog(log), HttpStatus.OK);
+    @PostMapping()
+    public ResponseEntity<LogDTO> addLog(@Valid @RequestBody LogDTO logDTO) {
+        return new ResponseEntity<>(logService.addLog(logDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

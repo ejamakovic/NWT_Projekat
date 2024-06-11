@@ -20,6 +20,7 @@ public class UserController {
     Environment environment;
 
     private final UserService userService;
+
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
@@ -68,6 +69,11 @@ public class UserController {
     @GetMapping("/{userId}/permissions")
     public ResponseEntity<List<?>> getPermissionsByUserId(@PathVariable("userId") Long userId) {
         return userService.getPermissionsByUserId(userId);
+    }
+
+    @GetMapping("/getUserIdByCardId/{keycard_id}")
+    public ResponseEntity<?> getUserIdByCardId(@PathVariable Long keycardId) {
+        return new ResponseEntity<>(userService.getUserIdByCardId(keycardId), HttpStatus.OK);
     }
 
 }

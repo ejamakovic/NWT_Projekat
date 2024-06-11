@@ -15,7 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 
 @Entity
-@Table(name="logs")
+@Table(name = "logs")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,7 +37,7 @@ public class Log {
     private String entryType;
 
     @ManyToOne
-    @NotNull(message = "Log must have userId")
+    @NotNull(message = "Log must have user")
     private User user;
 
     @NotNull

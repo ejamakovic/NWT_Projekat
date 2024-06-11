@@ -1,8 +1,10 @@
 package ba.nwt.keycard.RoomService.services;
 
 import ba.nwt.keycard.RoomService.RibbonProxies.PermissionServiceProxy;
+import ba.nwt.keycard.RoomService.RibbonProxies.RequestServiceProxy;
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
-import ba.nwt.keycard.RoomService.models.PermissionDTOs.PermissionDTO;
+import ba.nwt.keycard.RoomService.models.PermissionServiceDTOs.PermissionDTO;
+import ba.nwt.keycard.RoomService.models.RequestServiceDTOs.LogDTO;
 import ba.nwt.keycard.RoomService.models.Room.FullRoomDTO;
 import ba.nwt.keycard.RoomService.models.Room.Room;
 import ba.nwt.keycard.RoomService.models.Room.RoomDTO;
@@ -14,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,8 +28,20 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
     private final PermissionServiceProxy permissionServiceProxy;
+    private final RequestServiceProxy requestServiceProxy;
 
     private final JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public RoomService(RoomRepository roomRepository, RoomMapper roomMapper,
+            PermissionServiceProxy permissionServiceProxy, RequestServiceProxy requestServiceProxy,
+            JdbcTemplate jdbcTemplate) {
+        this.roomRepository = roomRepository;
+        this.roomMapper = roomMapper;
+        this.permissionServiceProxy = permissionServiceProxy;
+        this.requestServiceProxy = requestServiceProxy;
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<FullRoomDTO> findCustomRoomsByBuildingFloorAndRoomIds(Long buildingIds[], Long floorIds[],
             Long roomIds[]) {
@@ -69,15 +84,6 @@ public class RoomService {
                 rs.getString("building_name")), params.toArray());
     }
 
-    @Autowired
-    public RoomService(RoomRepository roomRepository, RoomMapper roomMapper,
-            PermissionServiceProxy permissionServiceProxy, JdbcTemplate jdbcTemplate) {
-        this.roomRepository = roomRepository;
-        this.roomMapper = roomMapper;
-        this.permissionServiceProxy = permissionServiceProxy;
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     public List<FullRoomDTO> getRoomsWithKeycard(Long keycardId) {
         // ubaciti provjeru ako je validna kartica
 
@@ -105,6 +111,44 @@ public class RoomService {
         System.out.println(fullRoomDTOs);
 
         return fullRoomDTOs;
+    }
+
+    public LogDTO enterRoom(Long roomId, Long keycardId, String entryType) {
+        // ubaciti provjeru ako je validna kartica
+
+        Long buildingId = roomRepository.findBuildingIdByRoomId(roomId);
+        Long floorId = roomRepository.findFloorIdByRoomId(roomId);
+
+        System.out.println(buildingId);
+        System.out.println(floorId);
+
+        Boolean hasPermission = permissionServiceProxy.checkPermission(keycardId, buildingId, floorId, roomId);
+        System.out.println(hasPermission);
+
+        if (hasPermission) {
+
+            // extract user id from keycard id
+            Long userId = permissionServiceProxy.getUserIdByCardId(keycardId);
+
+            LocalDate timestamp = LocalDate.now();
+            LogDTO logDTO = requestServiceProxy
+                    .addLog(new LogDTO(timestamp, entryType, userId, "User entered room", roomId));
+            // LocalDate timestamp, String entryType, Long userId, String description
+            return null;
+            // return new LogDTO( );
+        } else {
+            // ubaciti logiku za zabranu ulaska
+            return null;
+            // return new LogDTO();
+        }
+    }
+
+    public Long getBuildingIdByRoomId(Long roomId) {
+        return roomRepository.findBuildingIdByRoomId(roomId);
+    }
+
+    public Long getFloorIdByRoomId(Long roomId) {
+        return roomRepository.findFloorIdByRoomId(roomId);
     }
 
     public List<RoomDTO> getAllRooms() {

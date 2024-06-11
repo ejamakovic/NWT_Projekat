@@ -1,4 +1,4 @@
-package ba.nwt.keycard.RoomService.models.PermissionDTOs;
+package ba.nwt.keycard.RoomService.models.PermissionServiceDTOs;
 
 public class PermissionDTO {
     private Long id;

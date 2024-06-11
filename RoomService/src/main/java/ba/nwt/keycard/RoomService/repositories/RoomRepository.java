@@ -15,6 +15,12 @@ import org.springframework.stereotype.Repository;
 public interface RoomRepository extends JpaRepository<Room, Long> {
     List<Room> findRoomsByFloorId(Long floorId);
 
+    @Query("SELECT B.id FROM Room R JOIN R.floor F JOIN F.building B WHERE R.id = :roomId")
+    Long findBuildingIdByRoomId(Long roomId);
+
+    @Query("SELECT F.id FROM Room R JOIN R.floor F WHERE R.id = :roomId")
+    Long findFloorIdByRoomId(Long roomId);
+
     @Query("SELECT r FROM Room r JOIN r.floor f JOIN f.building b WHERE b.id = :buildingId ORDER BY f.id")
     List<Room> findRoomsByBuildingIdSortedByFloorId(Long buildingId);
 }

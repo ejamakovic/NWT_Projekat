@@ -15,19 +15,17 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-
     @Autowired
     private UserMapper userMapper;
 
     @Autowired
     private UserRepository userRepository;
 
-
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public User getUserById(Long id){
+    public User getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElse(null);
     }
@@ -51,7 +49,6 @@ public class UserService {
         return user.orElse(null);
     }
 
-
     private final KeycardPermissionClient keycardPermissionClient;
 
     @Autowired
@@ -65,5 +62,9 @@ public class UserService {
         Integer keycardId = Math.toIntExact(user.getKeycard().getId());
 
         return keycardPermissionClient.getAllPermissionsByKeycardId(keycardId);
+    }
+
+    public Long getUserIdByCardId(Long keycardId) {
+        return userRepository.getUserIdByCardId(keycardId);
     }
 }

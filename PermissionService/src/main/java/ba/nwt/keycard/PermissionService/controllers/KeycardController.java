@@ -89,6 +89,7 @@ public class KeycardController {
         List<Permission> permissions = keycardPermissionService.getPermissionsByKeycardId(keycardId);
         return ResponseEntity.ok().body(permissions);
     }
+
     @PostMapping
     public ResponseEntity<?> createKeycard(@Valid @RequestBody(required = false) Keycard keycard) {
         if (keycard == null) {

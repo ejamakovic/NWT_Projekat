@@ -19,18 +19,18 @@ public class KeycardController {
     private KeycardService keycardService;
 
     @GetMapping
-    public ResponseEntity<List<Keycard>> getAllKeycards(){
+    public ResponseEntity<List<Keycard>> getAllKeycards() {
         return new ResponseEntity<>(keycardService.getAllKeycards(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Keycard> getKeycardById(@PathVariable Long id){
+    public ResponseEntity<Keycard> getKeycardById(@PathVariable Long id) {
         return new ResponseEntity<>(keycardService.getKeycardById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Keycard> createKeycard(@Valid @RequestBody Keycard keycard){
+    public ResponseEntity<Keycard> createKeycard(@Valid @RequestBody Keycard keycard) {
         return new ResponseEntity<>(keycardService.createKeycard(keycard), HttpStatus.OK);
     }
 
@@ -45,4 +45,3 @@ public class KeycardController {
     }
 
 }
-
