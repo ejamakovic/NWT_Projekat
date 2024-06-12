@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class RequestResponseDTO {
 
     private Long requestId;
+    private Boolean status;
     private RoomDTO room;
     private UserDTO user;
     private TeamDTO team;

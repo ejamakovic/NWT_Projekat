@@ -30,6 +30,8 @@ public class Request {
     @NotNull(message = "Request must have userId")
     private User user;
 
+    private Boolean status = false;
+
     public Request(Long roomId, User user) {
         this.user = user;
         this.roomId = roomId;

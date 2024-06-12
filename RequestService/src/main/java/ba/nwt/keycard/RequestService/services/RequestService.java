@@ -43,7 +43,7 @@ public class RequestService {
             RoomDTO roomDTO = roomClient.getRoomById(request.getRoomId()).orElse(null);
             TeamDTO teamDTO = teamMapper.toDTO(request.getUser().getTeam());
             UserDTO userDTO = userMapper.toDTO(request.getUser());
-            return new RequestResponseDTO(request.getId(), roomDTO, userDTO, teamDTO);
+            return new RequestResponseDTO(request.getId(), request.getStatus(), roomDTO, userDTO, teamDTO);
         }).collect(Collectors.toList());
     }
 
@@ -54,7 +54,7 @@ public class RequestService {
             RoomDTO roomDTO = roomClient.getRoomById(request.getRoomId()).orElse(null);
             TeamDTO teamDTO = teamMapper.toDTO(request.getUser().getTeam());
             UserDTO userDTO = userMapper.toDTO(request.getUser());
-            return new RequestResponseDTO(request.getId(), roomDTO, userDTO, teamDTO);
+            return new RequestResponseDTO(request.getId(), request.getStatus(), roomDTO, userDTO, teamDTO);
         }
         return null;
     }
@@ -115,7 +115,7 @@ public class RequestService {
                 RoomDTO roomDTO = roomDTOS.stream().filter(r -> r.getId().equals(request.getRoomId())).findFirst().orElse(null);
                 UserDTO userDTO = userMapper.toDTO(user);
                 TeamDTO teamDTO = teamMapper.toDTO(user.getTeam());
-                return new RequestResponseDTO(request.getId(), roomDTO, userDTO, teamDTO);
+                return new RequestResponseDTO(request.getId(), request.getStatus(), roomDTO, userDTO, teamDTO);
             }).collect(Collectors.toList());
         } else {
             throw new ResourceNotFoundException("User not found with id " + userId);
