@@ -17,5 +17,6 @@ public class RequestDTO {
     @NotNull(message = "UserId is required")
     private Long userId;
 
+    private String status;
 
 }

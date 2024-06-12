@@ -50,12 +50,17 @@ public class RequestController {
     }
 
     @PutMapping("/status/{id}")
-    public ResponseEntity<String> updateRequestStatus(@PathVariable Long id, @RequestBody RequestStatus newStatus) {
-        boolean updated = requestService.updateRequestStatus(id, newStatus);
-        if (updated) {
-            return ResponseEntity.ok("Request with id " + id + " has been updated successfully to status: " + newStatus + ".");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found with id: " + id);
+    public ResponseEntity<String> updateRequestStatus(@PathVariable Long id, @RequestBody RequestDTO requestDTO) {
+        try {
+            RequestStatus newStatus = RequestStatus.valueOf(requestDTO.getStatus().toUpperCase());
+            boolean updated = requestService.updateRequestStatus(id, newStatus);
+            if (updated) {
+                return ResponseEntity.ok("Request with id " + id + " has been updated successfully to status: " + newStatus + ".");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found with id: " + id);
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid status value: " + requestDTO.getStatus());
         }
     }
 }
