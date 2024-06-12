@@ -60,6 +60,6 @@ public class TempAccessGrant {
     }
 
     @ManyToOne
-    @JoinColumn(name = "roomId", referencedColumnName = "id")
+    @JoinColumn(name = "roomId", referencedColumnName = "id", insertable = false, updatable = false)
     private Room room;
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import ba.nwt.keycard.RoomService.models.Building.Building;
 import ba.nwt.keycard.RoomService.models.Building.BuildingDTO;
@@ -11,6 +12,7 @@ import ba.nwt.keycard.RoomService.models.Building.BuildingMapper;
 import ba.nwt.keycard.RoomService.repositories.BuildingRepository;
 import ba.nwt.keycard.RoomService.repositories.TempAccessGrantsRepository;
 
+@Component
 public class TempAccessGrantMapper {
     private static TempAccessGrantsRepository tempAccessGrantsRepository;
 
