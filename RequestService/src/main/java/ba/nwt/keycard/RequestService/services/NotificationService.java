@@ -5,6 +5,7 @@ import ba.nwt.keycard.RequestService.models.Notification.NotificationDTO;
 import ba.nwt.keycard.RequestService.models.User.User;
 import ba.nwt.keycard.RequestService.repositories.NotificationRepository;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class NotificationService {
         return request.orElse(null);
     }
 
+    @Transactional
     public Notification createNotification(@Valid NotificationDTO notificationDTO){
         Optional<User> user = userRepository.findById(notificationDTO.getUserId());
         if(user.isPresent()){
@@ -43,6 +45,7 @@ public class NotificationService {
         }
     }
 
+    @Transactional
     public boolean deleteNotificationById(Long id) {
         Optional<Notification> notificationOptional = notificationRepository.findById(id);
         if (notificationOptional.isPresent()) {

@@ -71,8 +71,8 @@ public class UserController {
         return new ResponseEntity<>(userService.getPermissionsByUserId(userId), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/team")
-    public ResponseEntity<User> setUserTeamId(@PathVariable("id") Long userId, @RequestBody Long teamId) {
+    @PutMapping("/{id}/team/{teamId}")
+    public ResponseEntity<User> setUserTeamId(@PathVariable("id") Long userId, @PathVariable("teamId") Long teamId) {
         User updatedUser = userService.updateTeamId(userId, teamId);
         if (updatedUser != null) {
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);

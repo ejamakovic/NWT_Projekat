@@ -5,6 +5,7 @@ import ba.nwt.keycard.RequestService.models.Log.Log;
 import ba.nwt.keycard.RequestService.models.Log.LogDTO;
 import ba.nwt.keycard.RequestService.models.Log.LogMapper;
 import ba.nwt.keycard.RequestService.repositories.LogRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class LogService {
         return log.orElse(null);
     }
 
+    @Transactional
     public Log addLog(@Valid LogDTO logDTO) {
         Log log = logMapper.toEntity(logDTO);
         Optional<?> room = roomClient.getRoomById(log.getRoomId());
@@ -46,6 +48,7 @@ public class LogService {
         }
     }
 
+    @Transactional
     public boolean deleteLogById(Long id) {
         Optional<Log> logOptional = logRepository.findById(id);
         if (logOptional.isPresent()) {

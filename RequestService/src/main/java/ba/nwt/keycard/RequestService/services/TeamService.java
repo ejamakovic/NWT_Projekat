@@ -21,20 +21,22 @@ public class TeamService {
     @Autowired
     private UserRepository userRepository;
 
+
     public List<Team> getAllTeams(){ return teamRepository.findAll();}
+
 
     public Team getTeamById(Long id){
         Optional<Team> team = teamRepository.findById(id);
         return team.orElse(null);
     }
 
+    @Transactional
     public Team createTeam(TeamDTO teamDTO) {
         Team team = new Team();
         team.setName(teamDTO.getName());
-        User manager = null;
         if (teamDTO.getManagerId() != null) {
             Optional<User> managerOptional = userRepository.findById(teamDTO.getManagerId());
-            manager = managerOptional.get();
+            User manager = managerOptional.get();
             if (!managerOptional.isPresent()) {
                 throw new IllegalArgumentException("Manager with ID " + teamDTO.getManagerId() + " does not exist.");
             }
@@ -47,6 +49,7 @@ public class TeamService {
     public boolean deleteTeamById(Long id) {
         if (teamRepository.existsById(id)) {
             teamRepository.deleteById(id);
+            teamRepository.deleteTeamById(id);
             return true;
         }
         return false;

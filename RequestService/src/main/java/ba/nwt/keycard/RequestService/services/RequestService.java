@@ -16,6 +16,7 @@ import ba.nwt.keycard.RequestService.models.dtos.TempAccessGrantDTO;
 import ba.nwt.keycard.RequestService.repositories.RequestRepository;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,6 +77,7 @@ public class RequestService {
         return null;
     }
 
+    @Transactional
     public Request createRequest(@Valid RequestDTO requestDTO) {
         Optional<User> userOptional = userRepository.findById(requestDTO.getUserId());
         if (userOptional.isPresent()) {
@@ -92,6 +94,7 @@ public class RequestService {
         }
     }
 
+    @Transactional
     public boolean deleteRequestById(Long id) {
         Optional<Request> requestOptional = requestRepository.findById(id);
         if (requestOptional.isPresent()) {
@@ -130,15 +133,14 @@ public class RequestService {
         }
     }
 
+    @Transactional
     public boolean updateRequestStatus(Long id, RequestStatus newStatus) {
         Optional<Request> requestOptional = requestRepository.findById(id);
         if (requestOptional.isPresent()) {
             Request request = requestOptional.get();
             request.setStatus(newStatus);
             requestRepository.save(request);
-            // Send message after updating the request status
             sendMessage(request);
-
             return true;
         } else {
             return false;

@@ -7,6 +7,7 @@ import ba.nwt.keycard.RequestService.models.User.UserMapper;
 import ba.nwt.keycard.RequestService.repositories.TeamRepository;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
 import ba.nwt.keycard.RequestService.models.User.User;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,7 @@ public class UserService {
         return userRepository.save(userMapper.toEntity(user));
     }
 
+    @Transactional
     public boolean deleteUserByUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
@@ -68,6 +70,8 @@ public class UserService {
         return keycardPermissionClient.getAllPermissionsByKeycardId(keycardId);
     }
 
+
+    @Transactional
     public User updateTeamId(Long userId, Long teamId) {
         User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
@@ -81,6 +85,7 @@ public class UserService {
         return null;
     }
 
+    @Transactional
     public Long getUserIdByCardId(Long keycardId) {
         Long userId = userRepository.getUserIdByCardId(keycardId);
         return userId;
