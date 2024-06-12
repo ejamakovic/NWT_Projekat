@@ -53,22 +53,20 @@ public class User implements UserInterface, UserDetails {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JsonIgnore
-    //@JsonManagedReference
     private List<Request> requests;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JsonIgnore
-    //@JsonManagedReference
     private List<Log> logs;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
     @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JsonIgnore
-    //@JsonManagedReference
     private List<Notification> notifications;
 
-    @OneToOne
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JoinColumn(name = "keycard_id")
     private Keycard keycard;
 
@@ -77,12 +75,8 @@ public class User implements UserInterface, UserDetails {
 
     @PreRemove
     public void preRemove() {
-        // Handle cascade deletion of associated teams here
-        if (teams != null) {
-            for (Team team : teams) {
-                team.setManager(null);
-            }
-            teams.clear(); // Clear the list to detach the associated teams
+        for (Team team : teams) {
+            team.setManager(null);
         }
     }
 

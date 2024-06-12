@@ -29,9 +29,9 @@ public class KeycardController {
         return new ResponseEntity<>(keycardService.getKeycardById(id), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Keycard> createKeycard(@Valid @RequestBody Keycard keycard) {
-        return new ResponseEntity<>(keycardService.createKeycard(keycard), HttpStatus.OK);
+    @PostMapping("/{id}")
+    public ResponseEntity<Keycard> createKeycard(@PathVariable Long id) {
+        return new ResponseEntity<>(keycardService.createKeycard(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

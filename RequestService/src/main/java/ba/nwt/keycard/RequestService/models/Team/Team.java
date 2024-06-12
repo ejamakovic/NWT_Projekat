@@ -30,16 +30,14 @@ public class Team {
     private User manager;
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "team", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<User> users;
 
-    public Team(String name) {
-        this.name = name;
-    }
-
-    public Team(String s, User user1) {
-        name = s;
-        manager = user1;
+    @PreRemove
+    public void preRemove() {
+        for (User user : users) {
+            user.setTeam(null);
+        }
     }
 }
