@@ -73,7 +73,7 @@ public class UserController {
 
     @PutMapping("/{id}/team")
     public ResponseEntity<User> setUserTeamId(@PathVariable("id") Long userId, @RequestBody Long teamId) {
-        User updatedUser = userService.setUserTeamId(userId, teamId);
+        User updatedUser = userService.updateTeamId(userId, teamId);
         if (updatedUser != null) {
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         } else {

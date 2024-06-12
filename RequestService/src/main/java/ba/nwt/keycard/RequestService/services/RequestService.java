@@ -5,6 +5,7 @@ import ba.nwt.keycard.RequestService.controllers.ErrorHandler.CustomExceptions.R
 import ba.nwt.keycard.RequestService.models.Request.Request;
 import ba.nwt.keycard.RequestService.models.Request.RequestDTO;
 import ba.nwt.keycard.RequestService.models.Request.RequestResponseDTO;
+import ba.nwt.keycard.RequestService.models.Request.RequestStatus;
 import ba.nwt.keycard.RequestService.models.Team.TeamDTO;
 import ba.nwt.keycard.RequestService.models.Team.TeamMapper;
 import ba.nwt.keycard.RequestService.models.User.User;
@@ -94,14 +95,6 @@ public class RequestService {
         this.roomClient = roomClient;
     }
 
-    public List<RoomDTO> getAllRoomsForUser(Long userId) {
-            List<Long> roomIds = requestRepository.findByUser_Id(userId)
-                    .stream()
-                    .map(Request::getRoomId)
-                    .collect(Collectors.toList());
-            return roomClient.fetchRoomsByIds(roomIds);
-    }
-
     public List<RequestResponseDTO> getAllRequestsForUser(Long userId) {
         List<Request> requests = requestRepository.findByUser_Id(userId);
         Optional<User> userOptional = userRepository.findById(userId);
@@ -119,6 +112,19 @@ public class RequestService {
             }).collect(Collectors.toList());
         } else {
             throw new ResourceNotFoundException("User not found with id " + userId);
+        }
+    }
+
+    public boolean updateRequestStatus(Long id, RequestStatus newStatus) {
+        Optional<Request> requestOptional = requestRepository.findById(id);
+        if(requestOptional.isPresent()) {
+            Request request = requestOptional.get();
+            request.setStatus(newStatus);
+            requestRepository.save(request);
+            return true;
+        }
+        else{
+            return false;
         }
     }
 }

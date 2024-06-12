@@ -68,7 +68,7 @@ public class UserService {
         return keycardPermissionClient.getAllPermissionsByKeycardId(keycardId);
     }
 
-    public User setUserTeamId(Long userId, Long teamId) {
+    public User updateTeamId(Long userId, Long teamId) {
         User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
             Team team = teamRepository.findById(teamId).orElse(null);

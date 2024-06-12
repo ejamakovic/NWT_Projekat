@@ -30,7 +30,9 @@ public class Request {
     @NotNull(message = "Request must have userId")
     private User user;
 
-    private Boolean status = false;
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private RequestStatus status = RequestStatus.PENDING;
 
     public Request(Long roomId, User user) {
         this.user = user;
@@ -43,6 +45,7 @@ public class Request {
                 "id=" + id +
                 ", roomId=" + roomId +
                 ", user=" + (user != null ? user.getUsername() : null) +
+                ", status=" + status +
                 '}';
     }
 }
