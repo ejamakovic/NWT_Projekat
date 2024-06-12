@@ -1,7 +1,7 @@
 package ba.nwt.keycard.RequestService.models.User;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +25,7 @@ public class UserDTO {
 
     @NotNull(message = "Password is required")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=.*[a-zA-Z0-9@#$%^&+=!]).{8,}$", message = "Password must contain one upper case letter, one lower case letter, one special character, one number, and must be at least 8 characters long")
+    @JsonIgnore
     private String password;
 
     @NotNull(message = "Role is required")

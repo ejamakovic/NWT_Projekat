@@ -2,6 +2,8 @@ package ba.nwt.keycard.RequestService.controllers;
 
 import ba.nwt.keycard.RequestService.models.Request.Request;
 import ba.nwt.keycard.RequestService.models.Request.RequestDTO;
+import ba.nwt.keycard.RequestService.models.Request.RequestResponseDTO;
+import ba.nwt.keycard.RequestService.models.dtos.RoomDTO;
 import ba.nwt.keycard.RequestService.services.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,12 +20,12 @@ public class RequestController {
     private RequestService requestService;
 
     @GetMapping
-    public ResponseEntity<List<Request>> getAllRequests(){
+    public ResponseEntity<List<RequestResponseDTO>> getAllRequests(){
         return new ResponseEntity<>(requestService.getAllRequests(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Request> getRequestById(@PathVariable("id") Long id){
+    public ResponseEntity<RequestResponseDTO> getRequestById(@PathVariable("id") Long id){
         return new ResponseEntity<>(requestService.getRequestById(id), HttpStatus.OK);
     }
 
@@ -42,8 +44,9 @@ public class RequestController {
         }
     }
 
-    @GetMapping("/rooms/{userId}")
-    public ResponseEntity<List<?>> getAllRooms(@PathVariable("userId") Long userId){
-        return new ResponseEntity<>(requestService.getAllRoomsForUser(userId), HttpStatus.OK);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<RequestResponseDTO>> getAllRooms(@PathVariable("userId") Long userId) {
+        return new ResponseEntity<>(requestService.getAllRequestsForUser(userId), HttpStatus.OK);
     }
+
 }

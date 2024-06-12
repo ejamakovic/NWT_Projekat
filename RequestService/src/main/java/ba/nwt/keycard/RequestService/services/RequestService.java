@@ -1,9 +1,16 @@
 package ba.nwt.keycard.RequestService.services;
 
 import ba.nwt.keycard.RequestService.clients.RoomClient;
+import ba.nwt.keycard.RequestService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.RequestService.models.Request.Request;
 import ba.nwt.keycard.RequestService.models.Request.RequestDTO;
+import ba.nwt.keycard.RequestService.models.Request.RequestResponseDTO;
+import ba.nwt.keycard.RequestService.models.Team.TeamDTO;
+import ba.nwt.keycard.RequestService.models.Team.TeamMapper;
 import ba.nwt.keycard.RequestService.models.User.User;
+import ba.nwt.keycard.RequestService.models.User.UserDTO;
+import ba.nwt.keycard.RequestService.models.User.UserMapper;
+import ba.nwt.keycard.RequestService.models.dtos.RoomDTO;
 import ba.nwt.keycard.RequestService.repositories.RequestRepository;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +30,33 @@ public class RequestService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Request> getAllRequests(){
-        return requestRepository.findAll();
+    @Autowired
+    private TeamMapper teamMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    public List<RequestResponseDTO> getAllRequests(){
+
+        List<Request> requests = requestRepository.findAll();
+        return requests.stream().map(request -> {
+            RoomDTO roomDTO = roomClient.getRoomById(request.getRoomId()).orElse(null);
+            TeamDTO teamDTO = teamMapper.toDTO(request.getUser().getTeam());
+            UserDTO userDTO = userMapper.toDTO(request.getUser());
+            return new RequestResponseDTO(request.getId(), roomDTO, userDTO, teamDTO);
+        }).collect(Collectors.toList());
     }
 
-    public Request getRequestById(Long id){
-        Optional<Request> request = requestRepository.findById(id);
-        return request.orElse(null);
+    public RequestResponseDTO getRequestById(Long id){
+        Optional<Request> requestOptional = requestRepository.findById(id);
+        if(requestOptional.isPresent()){
+            Request request = requestOptional.get();
+            RoomDTO roomDTO = roomClient.getRoomById(request.getRoomId()).orElse(null);
+            TeamDTO teamDTO = teamMapper.toDTO(request.getUser().getTeam());
+            UserDTO userDTO = userMapper.toDTO(request.getUser());
+            return new RequestResponseDTO(request.getId(), roomDTO, userDTO, teamDTO);
+        }
+        return null;
     }
 
     public Request createRequest(@Valid RequestDTO requestDTO){
@@ -67,11 +94,32 @@ public class RequestService {
         this.roomClient = roomClient;
     }
 
-    public List<?> getAllRoomsForUser(Long userId) {
+    public List<RoomDTO> getAllRoomsForUser(Long userId) {
             List<Long> roomIds = requestRepository.findByUser_Id(userId)
                     .stream()
                     .map(Request::getRoomId)
                     .collect(Collectors.toList());
             return roomClient.fetchRoomsByIds(roomIds);
     }
+
+    public List<RequestResponseDTO> getAllRequestsForUser(Long userId) {
+        List<Request> requests = requestRepository.findByUser_Id(userId);
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            List<Long> roomIds = requests.stream().map(Request::getRoomId).collect(Collectors.toList());
+            List<RoomDTO> roomDTOS = roomClient.fetchRoomsByIds(roomIds);
+
+            return requests.stream().map(request -> {
+                RoomDTO roomDTO = roomDTOS.stream().filter(r -> r.getId().equals(request.getRoomId())).findFirst().orElse(null);
+                UserDTO userDTO = userMapper.toDTO(user);
+                TeamDTO teamDTO = teamMapper.toDTO(user.getTeam());
+                return new RequestResponseDTO(request.getId(), roomDTO, userDTO, teamDTO);
+            }).collect(Collectors.toList());
+        } else {
+            throw new ResourceNotFoundException("User not found with id " + userId);
+        }
+    }
 }
+
