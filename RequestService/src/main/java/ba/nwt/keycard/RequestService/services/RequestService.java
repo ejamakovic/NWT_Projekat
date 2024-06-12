@@ -12,12 +12,19 @@ import ba.nwt.keycard.RequestService.models.User.User;
 import ba.nwt.keycard.RequestService.models.User.UserDTO;
 import ba.nwt.keycard.RequestService.models.User.UserMapper;
 import ba.nwt.keycard.RequestService.models.dtos.RoomDTO;
+import ba.nwt.keycard.RequestService.models.dtos.TempAccessGrantDTO;
 import ba.nwt.keycard.RequestService.repositories.RequestRepository;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
+
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import jakarta.validation.Valid;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,7 +44,16 @@ public class RequestService {
     @Autowired
     private UserMapper userMapper;
 
-    public List<RequestResponseDTO> getAllRequests(){
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Value("${rabbitmq.exchange}")
+    private String exchange;
+
+    @Value("${rabbitmq.routingKey}")
+    private String routingKey;
+
+    public List<RequestResponseDTO> getAllRequests() {
 
         List<Request> requests = requestRepository.findAll();
         return requests.stream().map(request -> {
@@ -48,9 +64,9 @@ public class RequestService {
         }).collect(Collectors.toList());
     }
 
-    public RequestResponseDTO getRequestById(Long id){
+    public RequestResponseDTO getRequestById(Long id) {
         Optional<Request> requestOptional = requestRepository.findById(id);
-        if(requestOptional.isPresent()){
+        if (requestOptional.isPresent()) {
             Request request = requestOptional.get();
             RoomDTO roomDTO = roomClient.getRoomById(request.getRoomId()).orElse(null);
             TeamDTO teamDTO = teamMapper.toDTO(request.getUser().getTeam());
@@ -60,16 +76,15 @@ public class RequestService {
         return null;
     }
 
-    public Request createRequest(@Valid RequestDTO requestDTO){
+    public Request createRequest(@Valid RequestDTO requestDTO) {
         Optional<User> userOptional = userRepository.findById(requestDTO.getUserId());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             Optional<?> roomOptional = roomClient.getRoomById(requestDTO.getRoomId());
-            if(roomOptional.isPresent()) {
+            if (roomOptional.isPresent()) {
                 Request request = new Request(requestDTO.getRoomId(), user);
                 return requestRepository.save(request);
-            }
-            else{
+            } else {
                 throw new IllegalArgumentException("Room with ID " + requestDTO.getRoomId() + " does not exist.");
             }
         } else {
@@ -87,11 +102,10 @@ public class RequestService {
         return false;
     }
 
-
     private final RoomClient roomClient;
 
     @Autowired
-    public RequestService(RoomClient roomClient){
+    public RequestService(RoomClient roomClient) {
         this.roomClient = roomClient;
     }
 
@@ -105,7 +119,8 @@ public class RequestService {
             List<RoomDTO> roomDTOS = roomClient.fetchRoomsByIds(roomIds);
 
             return requests.stream().map(request -> {
-                RoomDTO roomDTO = roomDTOS.stream().filter(r -> r.getId().equals(request.getRoomId())).findFirst().orElse(null);
+                RoomDTO roomDTO = roomDTOS.stream().filter(r -> r.getId().equals(request.getRoomId())).findFirst()
+                        .orElse(null);
                 UserDTO userDTO = userMapper.toDTO(user);
                 TeamDTO teamDTO = teamMapper.toDTO(user.getTeam());
                 return new RequestResponseDTO(request.getId(), request.getStatus(), roomDTO, userDTO, teamDTO);
@@ -117,15 +132,25 @@ public class RequestService {
 
     public boolean updateRequestStatus(Long id, RequestStatus newStatus) {
         Optional<Request> requestOptional = requestRepository.findById(id);
-        if(requestOptional.isPresent()) {
+        if (requestOptional.isPresent()) {
             Request request = requestOptional.get();
             request.setStatus(newStatus);
             requestRepository.save(request);
+            // Send message after updating the request status
+            sendMessage(request);
+
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
-}
 
+    private void sendMessage(Request request) {
+        LocalDate timestamp = LocalDate.now();
+        TempAccessGrantDTO message = new TempAccessGrantDTO(request.getRoomId(), request.getUser().getId(),
+                timestamp);
+
+        // Send the message to the specified exchange with a routing key
+        rabbitTemplate.convertAndSend(exchange, routingKey, message);
+    }
+}
