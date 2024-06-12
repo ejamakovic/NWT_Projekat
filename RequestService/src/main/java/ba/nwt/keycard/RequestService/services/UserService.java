@@ -1,7 +1,6 @@
 package ba.nwt.keycard.RequestService.services;
 
 import ba.nwt.keycard.RequestService.clients.KeycardPermissionClient;
-import ba.nwt.keycard.RequestService.clients.RoomClient;
 import ba.nwt.keycard.RequestService.models.Team.Team;
 import ba.nwt.keycard.RequestService.models.User.UserDTO;
 import ba.nwt.keycard.RequestService.models.User.UserMapper;
@@ -9,7 +8,6 @@ import ba.nwt.keycard.RequestService.repositories.TeamRepository;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
 import ba.nwt.keycard.RequestService.models.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,7 +35,7 @@ public class UserService {
     }
 
     public User createUser(UserDTO user) {
-        return userRepository.save(userMapper.mapToUser(user));
+        return userRepository.save(userMapper.toEntity(user));
     }
 
     public boolean deleteUserByUsername(String username) {

@@ -40,6 +40,7 @@ public class User implements UserInterface, UserDetails {
     private String email;
 
     @NotNull
+    @JsonIgnore
     private String passwordHash;
 
     @NotNull
@@ -68,7 +69,6 @@ public class User implements UserInterface, UserDetails {
     private Keycard keycard;
 
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "manager", orphanRemoval = true)
-    @JsonIgnore
     private List<Team> teams;
 
     @ManyToOne

@@ -1,5 +1,6 @@
 package ba.nwt.keycard.RequestService.clients;
 
+import ba.nwt.keycard.RequestService.models.dtos.RoomDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,8 +13,8 @@ import java.util.Optional;
 @FeignClient(name = "ROOMSERVICE")
 public interface RoomClient {
     @PostMapping("/rs_api/rooms/user")
-    List<?> fetchRoomsByIds(@RequestBody List<Long> roomsIds);
+    List<RoomDTO> fetchRoomsByIds(@RequestBody List<Long> roomsIds);
 
     @GetMapping("/rs_api/rooms/{id}")
-    Optional<?> getRoomById(@PathVariable("id") Long roomId);
+    Optional<RoomDTO> getRoomById(@PathVariable("id") Long roomId);
 }
