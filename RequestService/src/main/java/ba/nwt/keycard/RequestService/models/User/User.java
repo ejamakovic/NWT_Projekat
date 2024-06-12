@@ -1,6 +1,8 @@
 package ba.nwt.keycard.RequestService.models.User;
 
 import ba.nwt.keycard.RequestService.models.*;
+import ba.nwt.keycard.RequestService.models.Log.Log;
+import ba.nwt.keycard.RequestService.models.Notification.Notification;
 import ba.nwt.keycard.RequestService.models.Request.Request;
 import ba.nwt.keycard.RequestService.models.Team.Team;
 import com.fasterxml.jackson.annotation.*;
@@ -15,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
@@ -62,12 +63,11 @@ public class User implements UserInterface, UserDetails {
     //@JsonManagedReference
     private List<Notification> notifications;
 
-    //@OneToOne(cascade = CascadeType.ALL)
     @OneToOne
     @JoinColumn(name = "keycard_id")
     private Keycard keycard;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "manager", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "manager", orphanRemoval = true)
     @JsonIgnore
     private List<Team> teams;
 

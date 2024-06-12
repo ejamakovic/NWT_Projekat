@@ -1,13 +1,10 @@
-package ba.nwt.keycard.RequestService.models.dtos;
+package ba.nwt.keycard.RequestService.models.Log;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import ba.nwt.keycard.RequestService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
-import ba.nwt.keycard.RequestService.models.Log;
 import ba.nwt.keycard.RequestService.models.User.User;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
 
@@ -21,11 +18,9 @@ public class LogMapper {
         this.userRepository = userRepository;
     }
 
-    // String entryType, Long userId, String description
+    // Long roomId, String entryType, Long userId, String description
     public LogDTO toDTO(Log log) {
-        LogDTO dto = new LogDTO(log.getTimestamp(), log.getEntryType(), log.getUser().getId(),
-                log.getDescription());
-        dto.setId(log.getId());
+        LogDTO dto = new LogDTO(log.getRoomId(), log.getEntryType(), log.getUser().getId(), log.getDescription());
         return dto;
     }
 
@@ -35,8 +30,7 @@ public class LogMapper {
 
     public Log toEntity(LogDTO dto) {
         Log log = new Log();
-        log.setId(dto.getId());
-        log.setTimestamp(dto.getTimestamp());
+        log.setRoomId(dto.getRoomId());
         log.setEntryType(dto.getEntryType());
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + dto.getUserId()));

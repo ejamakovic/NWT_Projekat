@@ -1,8 +1,6 @@
-package ba.nwt.keycard.RequestService.models;
+package ba.nwt.keycard.RequestService.models.Notification;
 
 import ba.nwt.keycard.RequestService.models.User.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,12 +22,8 @@ public class Notification {
     @NotNull(message = "Notification must have userId")
     private User user;
 
-    @NotNull
-    @NotBlank(message = "Message in notification is required")
+    @NotNull(message = "Message in notification is required")
+    @NotBlank(message = "Message in notification can't be empty")
     private String message;
 
-    public Notification(User user1, String message1) {
-        user = user1;
-        message = message1;
-    }
 }

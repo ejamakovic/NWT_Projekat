@@ -1,9 +1,7 @@
 package ba.nwt.keycard.RequestService.models.Request;
 
 import ba.nwt.keycard.RequestService.models.User.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -12,9 +10,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="requests", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"roomId", "userId"})
-})
+//Bez spamanja requesta
+//@Table(name="requests", uniqueConstraints = { @UniqueConstraint(columnNames = {"roomId", "userId"})})
+@Table(name = "requests")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

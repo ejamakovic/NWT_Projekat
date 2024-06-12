@@ -9,6 +9,7 @@ import ba.nwt.keycard.RequestService.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ public class RequestService {
         return request.orElse(null);
     }
 
-    public Request createRequest(RequestDTO requestDTO){
+    public Request createRequest(@Valid RequestDTO requestDTO){
         Optional<User> userOptional = userRepository.findById(requestDTO.getUserId());
         if (userOptional.isPresent()) {
             User user = userOptional.get();

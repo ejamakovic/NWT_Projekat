@@ -1,26 +1,29 @@
 package ba.nwt.keycard.RequestService.services;
 
-import ba.nwt.keycard.RequestService.models.Log;
-import ba.nwt.keycard.RequestService.models.User.User;
-import ba.nwt.keycard.RequestService.models.dtos.LogDTO;
-import ba.nwt.keycard.RequestService.models.dtos.LogMapper;
+import ba.nwt.keycard.RequestService.clients.RoomClient;
+import ba.nwt.keycard.RequestService.models.Log.Log;
+import ba.nwt.keycard.RequestService.models.Log.LogDTO;
+import ba.nwt.keycard.RequestService.models.Log.LogMapper;
 import ba.nwt.keycard.RequestService.repositories.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class LogService {
 
-    private LogRepository logRepository;
+    private final LogRepository logRepository;
     private final LogMapper logMapper;
+    private final RoomClient roomClient;
 
     @Autowired
-    public LogService(LogRepository logRepository, LogMapper logMapper) {
+    public LogService(LogRepository logRepository, LogMapper logMapper, RoomClient roomClient) {
         this.logRepository = logRepository;
         this.logMapper = logMapper;
+        this.roomClient = roomClient;
     }
 
     public List<Log> getAllLogs() {
@@ -29,14 +32,18 @@ public class LogService {
 
     public Log getLogById(Long id) {
         Optional<Log> log = logRepository.findById(id);
-        /* LogDTO logDTO = logMapper.toDTO(log.orElse(null)); */
         return log.orElse(null);
     }
 
-    public LogDTO addLog(LogDTO logDTO) {
+    public Log addLog(@Valid LogDTO logDTO) {
         Log log = logMapper.toEntity(logDTO);
-        LogDTO savedLogDTO = logMapper.toDTO(logRepository.save(log));
-        return savedLogDTO;
+        Optional<?> room = roomClient.getRoomById(log.getRoomId());
+        if(room.isPresent()){
+            return logRepository.save(log);
+        }
+        else{
+            throw new IllegalArgumentException("Room with ID " + log.getRoomId() + " does not exist.");
+        }
     }
 
     public boolean deleteLogById(Long id) {

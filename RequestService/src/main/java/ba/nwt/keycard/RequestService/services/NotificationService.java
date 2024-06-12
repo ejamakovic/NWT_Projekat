@@ -1,10 +1,14 @@
 package ba.nwt.keycard.RequestService.services;
 
-import ba.nwt.keycard.RequestService.models.Notification;
+import ba.nwt.keycard.RequestService.models.Notification.Notification;
+import ba.nwt.keycard.RequestService.models.Notification.NotificationDTO;
+import ba.nwt.keycard.RequestService.models.User.User;
 import ba.nwt.keycard.RequestService.repositories.NotificationRepository;
+import ba.nwt.keycard.RequestService.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +17,9 @@ public class NotificationService {
 
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Notification> getAllNotifications(){
         return notificationRepository.findAll();
@@ -23,8 +30,17 @@ public class NotificationService {
         return request.orElse(null);
     }
 
-    public Notification createNotification(Notification notification){
-        return notificationRepository.save(notification);
+    public Notification createNotification(@Valid NotificationDTO notificationDTO){
+        Optional<User> user = userRepository.findById(notificationDTO.getUserId());
+        if(user.isPresent()){
+            Notification notification = new Notification();
+            notification.setUser(user.get());
+            notification.setMessage(notificationDTO.getMessage());
+            return notificationRepository.save(notification);
+        }
+        else{
+            throw new IllegalArgumentException("User with " + notificationDTO.getUserId() + " id doesn't exist!");
+        }
     }
 
     public boolean deleteNotificationById(Long id) {
