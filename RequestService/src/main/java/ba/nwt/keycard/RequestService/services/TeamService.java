@@ -5,6 +5,7 @@ import ba.nwt.keycard.RequestService.models.Team.TeamDTO;
 import ba.nwt.keycard.RequestService.models.User.User;
 import ba.nwt.keycard.RequestService.repositories.TeamRepository;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,14 +43,12 @@ public class TeamService {
         return teamRepository.save(team);
     }
 
+    @Transactional
     public boolean deleteTeamById(Long id) {
-        Optional<Team> teamOptional = teamRepository.findById(id);
-        if (teamOptional.isPresent()) {
-            Team team = teamOptional.get();
-            teamRepository.delete(team);
+        if (teamRepository.existsById(id)) {
+            teamRepository.deleteById(id);
             return true;
         }
         return false;
     }
-
 }

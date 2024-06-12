@@ -29,8 +29,7 @@ public class Team {
     @JoinColumn(name = "manager_id")
     private User manager;
 
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "team", cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JsonIgnore
     private List<User> users;
 

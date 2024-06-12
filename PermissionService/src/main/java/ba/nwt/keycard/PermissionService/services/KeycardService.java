@@ -1,11 +1,10 @@
 package ba.nwt.keycard.PermissionService.services;
 
 import ba.nwt.keycard.PermissionService.models.Keycard;
-import ba.nwt.keycard.PermissionService.producers.MessageProducer;
 import ba.nwt.keycard.PermissionService.repositories.KeycardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 
@@ -14,20 +13,9 @@ public class KeycardService {
 
     private final KeycardRepository keycardRepository;
 
-    private final MessageProducer messageProducer;
-
-
     @Autowired
-    public KeycardService(KeycardRepository keycardRepository, MessageProducer messageProducer) {
+    public KeycardService(KeycardRepository keycardRepository) {
         this.keycardRepository = keycardRepository;
-        this.messageProducer = messageProducer;
-    }
-
-    @Transactional
-    public Keycard saveOrUpdateKeycard(Keycard keycard) {
-        Keycard savedKeycard = keycardRepository.save(keycard);
-        messageProducer.sendMessage(savedKeycard);
-        return savedKeycard;
     }
 
 

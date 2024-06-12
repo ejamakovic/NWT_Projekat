@@ -63,7 +63,7 @@ public class UserService {
     public List<?> getPermissionsByUserId(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         System.out.println(user);
-        Integer keycardId = Math.toIntExact(user.getKeycard().getId());
+        Integer keycardId = Math.toIntExact(user.getKeycardId());
 
         return keycardPermissionClient.getAllPermissionsByKeycardId(keycardId);
     }

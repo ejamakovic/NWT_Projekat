@@ -9,4 +9,8 @@ import java.util.Optional;
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Integer> {
     Optional<Team> findById(Long id);
+
+    void deleteById(Long id);
+
+    boolean existsById(Long id);
 }

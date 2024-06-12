@@ -65,10 +65,8 @@ public class User implements UserInterface, UserDetails {
     @JsonIgnore
     private List<Notification> notifications;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JoinColumn(name = "keycard_id")
-    private Keycard keycard;
+    private Long keycardId;
 
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "manager")
     private List<Team> teams;
@@ -91,17 +89,6 @@ public class User implements UserInterface, UserDetails {
         this.role = role;
         this.active = active;
     }
-
-    public User(String username, String email, String password, String role, Boolean active, Keycard keycard, Team team) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.active = active;
-        this.keycard = keycard;
-        this.team = team;
-    }
-
 
     @Override
     public String toString() {
