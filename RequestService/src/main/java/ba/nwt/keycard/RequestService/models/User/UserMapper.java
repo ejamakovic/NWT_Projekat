@@ -14,7 +14,7 @@ public class UserMapper {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
-        user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRole(userDTO.getRole());
         user.setActive(userDTO.getActive());
         return user;
@@ -24,7 +24,7 @@ public class UserMapper {
         UserDTO dto = new UserDTO();
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
-        dto.setPassword(user.getPasswordHash());
+        dto.setPassword(user.getPassword());
         dto.setRole(user.getRole());
         dto.setActive(user.getActive());
         return dto;

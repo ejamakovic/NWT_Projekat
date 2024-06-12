@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,7 +42,7 @@ public class User implements UserInterface, UserDetails {
 
     @NotNull
     @JsonIgnore
-    private String passwordHash;
+    private String password;
 
     @NotNull
     private String role;
@@ -50,16 +51,19 @@ public class User implements UserInterface, UserDetails {
     private Boolean active;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JsonIgnore
     //@JsonManagedReference
     private List<Request> requests;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JsonIgnore
     //@JsonManagedReference
     private List<Log> logs;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
     @JsonIgnore
     //@JsonManagedReference
     private List<Notification> notifications;
@@ -68,8 +72,19 @@ public class User implements UserInterface, UserDetails {
     @JoinColumn(name = "keycard_id")
     private Keycard keycard;
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "manager", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "manager")
     private List<Team> teams;
+
+    @PreRemove
+    public void preRemove() {
+        // Handle cascade deletion of associated teams here
+        if (teams != null) {
+            for (Team team : teams) {
+                team.setManager(null);
+            }
+            teams.clear(); // Clear the list to detach the associated teams
+        }
+    }
 
     @ManyToOne
     @JoinColumn(name = "team_id")
@@ -78,7 +93,7 @@ public class User implements UserInterface, UserDetails {
     public User(String username, String email, String password, String role, Boolean active) {
         this.username = username;
         this.email = email;
-        passwordHash = password;
+        this.password = password;
         this.role = role;
         this.active = active;
     }
@@ -86,7 +101,7 @@ public class User implements UserInterface, UserDetails {
     public User(String username, String email, String password, String role, Boolean active, Keycard keycard, Team team) {
         this.username = username;
         this.email = email;
-        passwordHash = password;
+        this.password = password;
         this.role = role;
         this.active = active;
         this.keycard = keycard;
@@ -103,13 +118,7 @@ public class User implements UserInterface, UserDetails {
                 '}';
     }
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Convert the role into a collection of GrantedAuthority objects
         return List.of(new SimpleGrantedAuthority(role));
-    }
-
-    @Override
-    public String getPassword() {
-        return passwordHash;
     }
 
     @Override

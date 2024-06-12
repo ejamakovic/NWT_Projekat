@@ -25,7 +25,6 @@ public class UserDTO {
 
     @NotNull(message = "Password is required")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=.*[a-zA-Z0-9@#$%^&+=!]).{8,}$", message = "Password must contain one upper case letter, one lower case letter, one special character, one number, and must be at least 8 characters long")
-    @JsonIgnore
     private String password;
 
     @NotNull(message = "Role is required")

@@ -34,7 +34,7 @@ public class AuthenticationService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             // Verify the password
-            if (passwordEncoder.matches(loginDto.getPassword(), user.getPasswordHash())) {
+            if (passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
                 logger.info("Password verification succeeded for username: {}", loginDto.getUsername());
                 // Generate JWT token
                 String token = jwtService.generateToken(user);
