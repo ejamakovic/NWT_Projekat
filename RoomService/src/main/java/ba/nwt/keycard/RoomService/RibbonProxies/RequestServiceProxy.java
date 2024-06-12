@@ -19,4 +19,7 @@ public interface RequestServiceProxy {
 
     @PostMapping("/user/log")
     public LogDTO addLog(@RequestBody LogDTO logDTO);
+
+    @GetMapping("/user/getUserIdByCardId/{keycardId}")
+    public Long getUserIdByCardId(@PathVariable("keycardId") Long keycardId);
 }

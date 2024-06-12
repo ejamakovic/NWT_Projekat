@@ -18,7 +18,4 @@ public interface PermissionServiceProxy {
     public Boolean checkPermission(@PathVariable("keycardId") Long keycardId,
             @RequestParam("buildingId") Long buildingId,
             @RequestParam("floorId") Long floorId, @RequestParam("roomId") Long roomId);
-
-    @GetMapping("/api/keycard/getUserIdByCardId/{keycardId}")
-    public Long getUserIdByCardId(@PathVariable("keycardId") Long keycardId);
 }

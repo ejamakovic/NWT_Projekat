@@ -2,6 +2,9 @@ package ba.nwt.keycard.RoomService.models.RequestServiceDTOs;
 
 import java.time.LocalDate;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class LogDTO {
 
     private Long id;

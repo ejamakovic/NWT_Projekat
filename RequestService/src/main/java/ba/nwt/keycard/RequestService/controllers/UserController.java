@@ -81,9 +81,11 @@ public class UserController {
         }
     }
 
-//    @GetMapping("/getUserIdByCardId/{keycard_id}")
-//    public ResponseEntity<?> getUserIdByCardId(@PathVariable Long keycardId) {
-//        return new ResponseEntity<>(userService.getUserIdByCardId(keycardId), HttpStatus.OK);
-//    }
+    @GetMapping("/getUserIdByCardId/{keycard_id}")
+    public ResponseEntity<Long> getUserIdByCardId(@PathVariable("keycard_id") Long keycardId) {
+        Long userId = userService.getUserIdByCardId(keycardId);
+        System.out.println(userId);
+        return ResponseEntity.ok(userId);
+    }
 
 }

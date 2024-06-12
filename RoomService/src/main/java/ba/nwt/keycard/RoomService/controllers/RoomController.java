@@ -5,6 +5,7 @@ import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.Reso
 import ba.nwt.keycard.RoomService.models.Building.Building;
 import ba.nwt.keycard.RoomService.models.Floor.Floor;
 import ba.nwt.keycard.RoomService.models.PermissionServiceDTOs.PermissionDTO;
+import ba.nwt.keycard.RoomService.models.RequestServiceDTOs.EntryDTO;
 import ba.nwt.keycard.RoomService.models.RequestServiceDTOs.LogDTO;
 import ba.nwt.keycard.RoomService.models.Room.FullRoomDTO;
 import ba.nwt.keycard.RoomService.models.Room.Room;
@@ -46,9 +47,9 @@ public class RoomController {
 
     @PostMapping("/enterRoom/{roomId}/keycard/{keycardId}")
     public ResponseEntity<LogDTO> enterRoom(@PathVariable("roomId") Long roomId,
-            @PathVariable("keycardId") Long keycardId, @RequestBody String entryType) {
+            @PathVariable("keycardId") Long keycardId, @RequestBody EntryDTO entryDTO) {
         // entry type = in or out
-        LogDTO response = roomService.enterRoom(roomId, keycardId, entryType);
+        LogDTO response = roomService.enterRoom(roomId, keycardId, entryDTO.getEntryType());
         return ResponseEntity.ok().body(response);
     }
 
@@ -162,7 +163,7 @@ public class RoomController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<List<RoomDTO>> getAllRoomsFromUser(@RequestBody List<Long> roomsIds){
+    public ResponseEntity<List<RoomDTO>> getAllRoomsFromUser(@RequestBody List<Long> roomsIds) {
         List<RoomDTO> rooms = roomsIds.stream()
                 .map(roomService::getRoomById)
                 .collect(Collectors.toList());
