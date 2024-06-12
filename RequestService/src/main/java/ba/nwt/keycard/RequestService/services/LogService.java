@@ -56,4 +56,7 @@ public class LogService {
         return false;
     }
 
+    public List<Log> getLogsByUserId(Long userId) {
+        return logRepository.findByUserId(userId);
+    }
 }

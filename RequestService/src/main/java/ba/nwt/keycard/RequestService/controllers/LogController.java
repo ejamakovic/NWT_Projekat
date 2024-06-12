@@ -27,6 +27,11 @@ public class LogController {
         return new ResponseEntity<>(logService.getLogById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Log>> getLogsByUserId(@PathVariable Long userId) {
+        return new ResponseEntity<>(logService.getLogsByUserId(userId), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<Log> addLog(@Valid @RequestBody LogDTO logDTO) {
         return new ResponseEntity<>(logService.addLog(logDTO), HttpStatus.OK);
