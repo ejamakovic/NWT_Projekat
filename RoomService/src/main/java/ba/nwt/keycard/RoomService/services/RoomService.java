@@ -11,6 +11,7 @@ import ba.nwt.keycard.RoomService.models.Room.FullRoomDTO;
 import ba.nwt.keycard.RoomService.models.Room.Room;
 import ba.nwt.keycard.RoomService.models.Room.RoomDTO;
 import ba.nwt.keycard.RoomService.models.Room.RoomMapper;
+import ba.nwt.keycard.RoomService.models.TempAccessGrant.TempAccessGrantDTO;
 import ba.nwt.keycard.RoomService.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,18 +32,20 @@ public class RoomService {
     private final RoomMapper roomMapper;
     private final PermissionServiceProxy permissionServiceProxy;
     private final RequestServiceProxy requestServiceProxy;
+    private final TempAccessGrantsService tempAccessGrantsService;
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public RoomService(RoomRepository roomRepository, RoomMapper roomMapper,
             PermissionServiceProxy permissionServiceProxy, RequestServiceProxy requestServiceProxy,
-            JdbcTemplate jdbcTemplate) {
+            JdbcTemplate jdbcTemplate, TempAccessGrantsService tempAccessGrantsService) {
         this.roomRepository = roomRepository;
         this.roomMapper = roomMapper;
         this.permissionServiceProxy = permissionServiceProxy;
         this.requestServiceProxy = requestServiceProxy;
         this.jdbcTemplate = jdbcTemplate;
+        this.tempAccessGrantsService = tempAccessGrantsService;
     }
 
     public List<FullRoomDTO> findCustomRoomsByBuildingFloorAndRoomIds(Long buildingIds[], Long floorIds[],
@@ -221,19 +224,45 @@ public class RoomService {
                 Long userId = requestServiceProxy.getUserIdByCardId(keycardId);
                 System.out.println("user" + userId);
 
-                LocalDate timestamp = LocalDate.now();
+                LocalDateTime timestamp = LocalDateTime.now();
                 LogDTO logDTO = requestServiceProxy
                         .addLog(new LogDTO(timestamp, entryType, userId, "User entered room", roomId));
                 logDTO.setUserId(userId);
                 return logDTO;
             } else {
-                throw new UnathorizedAccessException("Unauthorized access to room with id " + roomId);
+                System.out.println(keycardId);
+                Boolean accessGranted = false;
+                Long userId = requestServiceProxy.getUserIdByCardId(keycardId);
+                System.out.println("user" + userId);
+                List<TempAccessGrantDTO> accessGrants = tempAccessGrantsService.getTempAccessGrantsByUserId(userId);
+                LogDTO logDTO = null;
+                if (accessGrants.size() > 0) {
+                    for (TempAccessGrantDTO accessGrant : accessGrants) {
+                        if (accessGrant.getRoomId() == roomId) {
+                            System.out.println(accessGrant.getRoomId());
+                            LocalDateTime timestamp = LocalDateTime.now();
+                            // if it's been less than 30 minutes since the access grant was created
+                            if (accessGrant.getTimestamp().plusMinutes(30).isAfter(timestamp)) {
+                                logDTO = requestServiceProxy
+                                        .addLog(new LogDTO(timestamp, entryType, userId, "User entered room", roomId));
+                                logDTO.setUserId(userId);
+                                accessGranted = true;
+                            } else {
+                                throw new UnathorizedAccessException(
+                                        "User does not have permission to enter room with keycard id "
+                                                + keycardId + " and room id " + roomId);
+                            }
+                        }
+                    }
+                }
+                if (!accessGranted) {
+                    throw new UnathorizedAccessException("User does not have permission to enter room with keycard id "
+                            + keycardId + " and room id " + roomId);
+                }
+                return logDTO;
             }
         } catch (feign.FeignException.NotFound e) {
             throw new ResourceNotFoundException("User not found with keycard id " + keycardId);
-        } catch (Exception e) {
-            // Handle other exceptions
-            throw new GeneralException("An error occurred while processing the request.");
         }
     }
 

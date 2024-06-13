@@ -22,7 +22,21 @@ public class TempAccessGrantsService {
     }
 
     public TempAccessGrantDTO addTempAccessGrant(TempAccessGrantDTO tempAccessGrantDTO) {
-        return tempAccessGrantMapper.toDTO(repository.save(tempAccessGrantMapper.toEntity(tempAccessGrantDTO)));
+        // Convert DTO to entity
+        TempAccessGrant entity = tempAccessGrantMapper.toEntity(tempAccessGrantDTO);
+        // Check if there's an existing grant for the same userId and roomId
+        TempAccessGrant existingGrant = repository.findByUserIdAndRoomId(entity.getUserId(), entity.getRoomId());
+        if (existingGrant != null) {
+            // If an existing grant is found, update its properties (except id)
+            existingGrant.setTimestamp(entity.getTimestamp());
+            // Save the updated entity
+            entity = repository.save(existingGrant);
+        } else {
+            // If no existing grant, save the new entity
+            entity = repository.save(entity);
+        }
+        // Convert the saved/updated entity back to DTO and return
+        return tempAccessGrantMapper.toDTO(entity);
     }
 
     public TempAccessGrantDTO getTempAccessGrantById(Long id) {
@@ -38,6 +52,10 @@ public class TempAccessGrantsService {
         LocalDateTime cutoff = LocalDateTime.now().minusMinutes(30);
 
         return tempAccessGrantMapper.toDTOList(repository.findByUserIdWithRecentTimestamp(userId, cutoff));
+    }
+
+    public TempAccessGrantDTO getTempAccessGrantByUserIdAndRoomId(Long userId, Long roomId) {
+        return tempAccessGrantMapper.toDTO(repository.findByUserIdAndRoomId(userId, roomId));
     }
 
     public void deleteTempAccessGrant(Long id) {
