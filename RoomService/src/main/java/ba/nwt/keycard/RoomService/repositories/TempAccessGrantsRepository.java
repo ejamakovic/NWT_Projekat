@@ -16,4 +16,6 @@ public interface TempAccessGrantsRepository extends JpaRepository<TempAccessGran
     @Query("SELECT t FROM TempAccessGrant t WHERE t.userId = :userId AND t.timestamp >= :cutoff")
     List<TempAccessGrant> findByUserIdWithRecentTimestamp(@Param("userId") Long userId,
             @Param("cutoff") LocalDateTime cutoff);
+
+    TempAccessGrant findByUserIdAndRoomId(Long userId, Long roomId);
 }

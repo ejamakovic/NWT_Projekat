@@ -1,6 +1,6 @@
 package ba.nwt.keycard.RoomService.models.RequestServiceDTOs;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.NoArgsConstructor;
 
@@ -9,20 +9,20 @@ public class LogDTO {
 
     private Long id;
     private Long roomId;
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
     private String entryType;
     private Long userId; // Assuming User is another class, we'll just use userId here
     private String description;
 
     // Constructors
-    public LogDTO(LocalDate timestamp, String entryType, Long userId, String description) {
+    public LogDTO(LocalDateTime timestamp, String entryType, Long userId, String description) {
         this.timestamp = timestamp;
         this.entryType = entryType;
         this.userId = userId;
         this.description = description;
     }
 
-    public LogDTO(LocalDate timestamp, String entryType, Long userId, String description, Long roomId) {
+    public LogDTO(LocalDateTime timestamp, String entryType, Long userId, String description, Long roomId) {
         this(timestamp, entryType, userId, description); // Call the other constructor
         this.roomId = roomId;
     }
@@ -44,11 +44,11 @@ public class LogDTO {
         this.roomId = roomId;
     }
 
-    public LocalDate getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 

@@ -1,6 +1,7 @@
 package ba.nwt.keycard.RequestService.services;
 
 import ba.nwt.keycard.RequestService.clients.RoomClient;
+import ba.nwt.keycard.RequestService.controllers.ErrorHandler.CustomExceptions.GeneralException;
 import ba.nwt.keycard.RequestService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.RequestService.models.Request.Request;
 import ba.nwt.keycard.RequestService.models.Request.RequestDTO;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import jakarta.validation.Valid;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -134,9 +136,19 @@ public class RequestService {
             // ovdje treba zamijeniti rabbitmq (sendMessage) sa proxy da se salje poruka na
             // room service
             // sendMessage(request);
-            return true;
+            TempAccessGrantDTO tempAccessGrantDTO = new TempAccessGrantDTO();
+            tempAccessGrantDTO.setUserId(request.getUser().getId());
+            tempAccessGrantDTO.setRoomId(request.getRoomId());
+            tempAccessGrantDTO.setTimestamp(LocalDateTime.now());
+            try {
+                if (newStatus.equals(RequestStatus.ACCEPTED))
+                    roomClient.addTempAccessGrant(tempAccessGrantDTO);
+                return true;
+            } catch (Exception e) {
+                throw new GeneralException("Error while sending temp access grant to room service.");
+            }
         } else {
-            return false;
+            throw new ResourceNotFoundException("Request not found with id " + id);
         }
     }
 }

@@ -1,7 +1,10 @@
 package ba.nwt.keycard.RequestService.clients;
 
 import ba.nwt.keycard.RequestService.models.dtos.RoomDTO;
+import ba.nwt.keycard.RequestService.models.dtos.TempAccessGrantDTO;
+
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,4 +20,7 @@ public interface RoomClient {
 
     @GetMapping("/rs_api/rooms/{id}")
     Optional<RoomDTO> getRoomById(@PathVariable("id") Long roomId);
+
+    @PostMapping("/rs_api/tempAccessGrants")
+    public ResponseEntity<TempAccessGrantDTO> addTempAccessGrant(@RequestBody TempAccessGrantDTO tempAccessGrantDTO);
 }

@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "logs")
@@ -24,7 +24,7 @@ public class Log {
     private Long roomId;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate timestamp = LocalDate.now();;
+    private LocalDateTime timestamp = LocalDateTime.now();
 
     @NotNull(message = "Entry type is required")
     private String entryType;

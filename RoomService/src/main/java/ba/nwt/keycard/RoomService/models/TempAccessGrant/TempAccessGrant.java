@@ -1,6 +1,6 @@
 package ba.nwt.keycard.RoomService.models.TempAccessGrant;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import ba.nwt.keycard.RoomService.models.Floor.Floor;
@@ -33,7 +33,7 @@ public class TempAccessGrant {
 
     @NotNull(message = "Timestamp must not be null")
     @Column(name = "timestamp")
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
 
     public void setRoomId(Long roomId) {
         this.roomId = roomId;
@@ -51,11 +51,11 @@ public class TempAccessGrant {
         return this.userId;
     }
 
-    public void setTimestamp(LocalDate timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
-    public LocalDate getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return this.timestamp;
     }
 
