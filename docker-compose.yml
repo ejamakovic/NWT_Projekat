@@ -58,6 +58,10 @@ services:
       context: ./system_events
       dockerfile: Dockerfile
     restart: on-failure
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/System_Events?sslMode=REQUIRED
+      - SPRING_DATASOURCE_USERNAME=doadmin
+      - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
     depends_on:
       - eureka-server
       - api-gateway

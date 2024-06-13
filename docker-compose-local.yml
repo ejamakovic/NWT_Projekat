@@ -61,6 +61,11 @@ services:
     depends_on:
       - eureka-server
       - api-gateway
+      - system-events-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://system-events-db:3306/SystemEventsDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpassword
     ports:
       - "6565:6565"
     networks:
@@ -77,10 +82,11 @@ services:
       - eureka-server
       - config-server
       - api-gateway
+      - request-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/RequestServiceDB?sslMode=REQUIRED
-      - SPRING_DATASOURCE_USERNAME=doadmin
-      - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
+      - SPRING_DATASOURCE_URL=jdbc:mysql://request-db:3306/RequestServiceDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpassword
       - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
       - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
     networks:
@@ -97,10 +103,11 @@ services:
       - eureka-server
       - config-server
       - api-gateway
+      - room-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/RoomServiceDB?sslMode=REQUIRED
-      - SPRING_DATASOURCE_USERNAME=doadmin
-      - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
+      - SPRING_DATASOURCE_URL=jdbc:mysql://room-db:3306/RoomServiceDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpassword
       - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
       - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
     networks:
@@ -117,14 +124,63 @@ services:
       - eureka-server
       - config-server
       - api-gateway
+      - permission-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/PermissionServiceDB?sslMode=REQUIRED
-      - SPRING_DATASOURCE_USERNAME=doadmin
-      - SPRING_DATASOURCE_PASSWORD=AVNS_25qDqGi9EyQX21DDfeH
+      - SPRING_DATASOURCE_URL=jdbc:mysql://permission-db:3306/PermissionServiceDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpassword
       - CONFIG_SERVER_URL=http://admin:nimda@config-server:8888
       - EUREKA_DEFAULT_ZONE=http://eureka-server:8761/eureka/
     networks:
       - nwt_network
+
+  request-db:
+    container_name: request-db
+    image: mysql:5.7
+    restart: on-failure
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=RequestServiceDB
+    networks:
+      - nwt_network
+    ports:
+      - "33066:3306"
+
+  room-db:
+    container_name: room-db
+    image: mysql:5.7
+    restart: on-failure
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=RoomServiceDB
+    networks:
+      - nwt_network
+    ports:
+      - "33067:3306"
+
+  permission-db:
+    container_name: permission-db
+    image: mysql:5.7
+    restart: on-failure
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=PermissionServiceDB
+    networks:
+      - nwt_network
+    ports:
+      - "33068:3306"
+
+  system-events-db:
+    container_name: system-events-db
+    image: mysql:5.7
+    restart: on-failure
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=SystemEventsDB
+    networks:
+      - nwt_network
+    ports:
+      - "33069:3306"
 
   rabbitmq:
     container_name: rabbitmq
@@ -154,7 +210,7 @@ services:
     expose:
       - "3000"
     ports:
-      - 3000:3000
+      - "3000:3000"
     environment:
       - CHOKIDAR_USEPOLLING=true
       - REACT_APP_BASE_URL=http://localhost:8080
