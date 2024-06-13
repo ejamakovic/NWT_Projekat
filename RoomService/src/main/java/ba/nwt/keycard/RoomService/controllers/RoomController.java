@@ -45,6 +45,12 @@ public class RoomController {
         return ResponseEntity.ok().body(fullRoomDTOs);
     }
 
+    @GetMapping("/getLockedRoomsWithKeycard/{keycardId}")
+    public ResponseEntity<List<FullRoomDTO>> getLockedRoomsWithKeycard(@PathVariable("keycardId") Long keycardId) {
+        List<FullRoomDTO> fullRoomDTOs = roomService.getLockedRoomsWithKeycard(keycardId);
+        return ResponseEntity.ok().body(fullRoomDTOs);
+    }
+
     @PostMapping("/enterRoom/{roomId}/keycard/{keycardId}")
     public ResponseEntity<LogDTO> enterRoom(@PathVariable("roomId") Long roomId,
             @PathVariable("keycardId") Long keycardId, @RequestBody EntryDTO entryDTO) {
