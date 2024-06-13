@@ -124,4 +124,8 @@ public class UserService {
         }
         return null;
     }
+
+    public List<User> getUsersByRoles(List<String> roles) {
+            return userRepository.findByRoleIn(roles);
+    }
 }

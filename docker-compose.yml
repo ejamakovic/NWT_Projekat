@@ -75,7 +75,6 @@ services:
       - eureka-server
       - config-server
       - api-gateway
-      - rabbitmq
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db-mysql-fra1-62529-do-user-16093561-0.c.db.ondigitalocean.com:25060/RequestServiceDB?sslMode=REQUIRED
       - SPRING_DATASOURCE_USERNAME=doadmin
@@ -142,11 +141,11 @@ services:
     image: frontend:latest
     container_name: frontend
     build:
-      context: ./nwt-front/NWT-FE
+      context: ./NWT-FE
       dockerfile: Dockerfile
     restart: on-failure
     volumes:
-      - './nwt-front/nwt-election:/app'
+      - './NWT-FE:/app'
       - '/app/node_modules'
     networks:
       - nwt_network

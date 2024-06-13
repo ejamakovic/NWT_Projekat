@@ -1,5 +1,6 @@
 package ba.nwt.keycard.RequestService.controllers;
 
+import java.util.Arrays;
 import java.util.List;
 
 import ba.nwt.keycard.RequestService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
@@ -30,6 +31,13 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getUsersWithSpecificRoles() {
+        List<String> roles = Arrays.asList("user", "manager");
+        List<User> users = userService.getUsersByRoles(roles);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/id/{id}")
