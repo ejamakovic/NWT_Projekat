@@ -1,20 +1,25 @@
 package ba.nwt.keycard.RequestService.services;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import ba.nwt.keycard.RequestService.clients.KeycardClient;
+import ba.nwt.keycard.RequestService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.RequestService.models.KeycardDTO;
 import ba.nwt.keycard.RequestService.models.Team.Team;
+import ba.nwt.keycard.RequestService.models.User.User;
 import ba.nwt.keycard.RequestService.models.User.UserDTO;
 import ba.nwt.keycard.RequestService.models.User.UserMapper;
 import ba.nwt.keycard.RequestService.repositories.TeamRepository;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
-import ba.nwt.keycard.RequestService.models.User.User;
 import feign.FeignException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -28,9 +33,7 @@ public class UserService {
     @Autowired
     private TeamRepository teamRepository;
 
-
     private final KeycardClient keycardClient;
-
 
     @Autowired
     public UserService(KeycardClient keycardClient) {
@@ -66,7 +69,6 @@ public class UserService {
         return user.orElse(null);
     }
 
-
     public List<?> getPermissionsByUserId(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         System.out.println(user);
@@ -74,7 +76,6 @@ public class UserService {
 
         return keycardClient.getAllPermissionsByKeycardId(keycardId);
     }
-
 
     @Transactional
     public User updateTeamId(Long userId, Long teamId) {
@@ -97,7 +98,7 @@ public class UserService {
     }
 
     @Transactional
-    public User updateKeycard(Long userId, Long keycardId){
+    public User updateKeycard(Long userId, Long keycardId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Optional<KeycardDTO> keycardDTOOptional = null;
         try {
@@ -113,5 +114,13 @@ public class UserService {
         user.setKeycardId(keycardId);
         return userRepository.save(user);
 
+    }
+
+    public Long getKeycardIdByUserId(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            return user.getKeycardId();
+        }
+        return null;
     }
 }

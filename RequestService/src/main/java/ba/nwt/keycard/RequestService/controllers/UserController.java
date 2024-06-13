@@ -93,13 +93,23 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/keycard/{keycardId}")
-    public ResponseEntity<User> updateKeycardId(@PathVariable("userId") Long userId, @PathVariable("keycardId") Long keycardId){
+    public ResponseEntity<User> updateKeycardId(@PathVariable("userId") Long userId,
+            @PathVariable("keycardId") Long keycardId) {
         User updatedUser = userService.updateKeycard(userId, keycardId);
         if (updatedUser != null) {
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/getKeycardIdByUserId/{userId}")
+    public ResponseEntity<Long> getKeycardIdByUserId(@PathVariable("userId") Long userId) {
+        Long keycardId = userService.getKeycardIdByUserId(userId);
+        if (keycardId == null) {
+            throw new ResourceNotFoundException("Keycard not found for user id " + userId);
+        }
+        return ResponseEntity.ok(keycardId);
     }
 
 }
