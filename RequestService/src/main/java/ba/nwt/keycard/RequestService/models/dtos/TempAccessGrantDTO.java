@@ -1,6 +1,6 @@
 package ba.nwt.keycard.RequestService.models.dtos;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.NoArgsConstructor;
 
@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 public class TempAccessGrantDTO {
     private Long roomId;
     private Long userId;
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
 
-    public TempAccessGrantDTO(Long roomId, Long userId, LocalDate timestamp) {
+    public TempAccessGrantDTO(Long roomId, Long userId, LocalDateTime timestamp) {
         this.roomId = roomId;
         this.userId = userId;
         this.timestamp = timestamp;
@@ -32,7 +32,11 @@ public class TempAccessGrantDTO {
         this.userId = userId;
     }
 
-    public LocalDate getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return this.timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 }

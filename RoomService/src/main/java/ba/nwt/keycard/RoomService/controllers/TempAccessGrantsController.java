@@ -8,13 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ba.nwt.keycard.RoomService.models.TempAccessGrant.TempAccessGrantDTO;
 import ba.nwt.keycard.RoomService.services.TempAccessGrantsService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
-@RestController("/rs_api/tempAccessGrants")
+@RestController
+@RequestMapping("/rs_api/tempAccessGrants")
 public class TempAccessGrantsController {
     private final TempAccessGrantsService tempAccessGrantsService;
 
@@ -25,6 +27,7 @@ public class TempAccessGrantsController {
 
     @PostMapping
     public ResponseEntity<TempAccessGrantDTO> addTempAccessGrant(@RequestBody TempAccessGrantDTO tempAccessGrantDTO) {
+        System.out.println("TempAccessGrantsController.addTempAccessGrant");
         return ResponseEntity.ok().body(tempAccessGrantsService.addTempAccessGrant(tempAccessGrantDTO));
     }
 
