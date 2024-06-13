@@ -233,6 +233,12 @@ public class RoomService {
     public LogDTO enterRoom(Long roomId, Long keycardId, String entryType) {
         // ubaciti provjeru ako je validna kartica
         try {
+            String description;
+            if (entryType.equals("IN")) {
+                description = "User entered room";
+            } else {
+                description = "User exited room";
+            }
             Long buildingId = roomRepository.findBuildingIdByRoomId(roomId);
             Long floorId = roomRepository.findFloorIdByRoomId(roomId);
 
@@ -250,7 +256,7 @@ public class RoomService {
 
                 LocalDateTime timestamp = LocalDateTime.now();
                 LogDTO logDTO = requestServiceProxy
-                        .addLog(new LogDTO(timestamp, entryType, userId, "User entered room", roomId));
+                        .addLog(new LogDTO(timestamp, entryType, userId, description, roomId));
                 logDTO.setUserId(userId);
                 return logDTO;
             } else {
@@ -268,7 +274,7 @@ public class RoomService {
                             // if it's been less than 30 minutes since the access grant was created
                             if (accessGrant.getTimestamp().plusMinutes(30).isAfter(timestamp)) {
                                 logDTO = requestServiceProxy
-                                        .addLog(new LogDTO(timestamp, entryType, userId, "User entered room", roomId));
+                                        .addLog(new LogDTO(timestamp, entryType, userId, description, roomId));
                                 logDTO.setUserId(userId);
                                 accessGranted = true;
                             } else {
