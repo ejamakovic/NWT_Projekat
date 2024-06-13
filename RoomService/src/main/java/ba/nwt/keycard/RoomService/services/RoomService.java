@@ -2,6 +2,7 @@ package ba.nwt.keycard.RoomService.services;
 
 import ba.nwt.keycard.RoomService.RibbonProxies.PermissionServiceProxy;
 import ba.nwt.keycard.RoomService.RibbonProxies.RequestServiceProxy;
+import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.GeneralException;
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.RoomService.controllers.ErrorHandler.CustomExceptions.UnathorizedAccessException;
 import ba.nwt.keycard.RoomService.models.PermissionServiceDTOs.PermissionDTO;
@@ -116,29 +117,35 @@ public class RoomService {
 
     public LogDTO enterRoom(Long roomId, Long keycardId, String entryType) {
         // ubaciti provjeru ako je validna kartica
+        try {
+            Long buildingId = roomRepository.findBuildingIdByRoomId(roomId);
+            Long floorId = roomRepository.findFloorIdByRoomId(roomId);
 
-        Long buildingId = roomRepository.findBuildingIdByRoomId(roomId);
-        Long floorId = roomRepository.findFloorIdByRoomId(roomId);
+            System.out.println(buildingId);
+            System.out.println(floorId);
 
-        System.out.println(buildingId);
-        System.out.println(floorId);
+            Boolean hasPermission = permissionServiceProxy.checkPermission(keycardId, buildingId, floorId, roomId);
+            System.out.println(hasPermission);
 
-        Boolean hasPermission = permissionServiceProxy.checkPermission(keycardId, buildingId, floorId, roomId);
-        System.out.println(hasPermission);
+            // dodati provjeru, if !hasPermission, provjeri da li ima approved request
+            if (hasPermission) {
+                System.out.println(keycardId);
+                Long userId = requestServiceProxy.getUserIdByCardId(keycardId);
+                System.out.println("user" + userId);
 
-        // dodati provjeru, if !hasPermission, provjeri da li ima approved request
-        if (hasPermission) {
-            System.out.println(keycardId);
-            Long userId = requestServiceProxy.getUserIdByCardId(keycardId);
-            System.out.println("user" + userId);
-
-            LocalDate timestamp = LocalDate.now();
-            LogDTO logDTO = requestServiceProxy
-                    .addLog(new LogDTO(timestamp, entryType, userId, "User entered room", roomId));
-            logDTO.setUserId(userId);
-            return logDTO;
-        } else {
-            throw new UnathorizedAccessException("You don't have permission to enter this room");
+                LocalDate timestamp = LocalDate.now();
+                LogDTO logDTO = requestServiceProxy
+                        .addLog(new LogDTO(timestamp, entryType, userId, "User entered room", roomId));
+                logDTO.setUserId(userId);
+                return logDTO;
+            } else {
+                throw new UnathorizedAccessException("Unauthorized access to room with id " + roomId);
+            }
+        } catch (feign.FeignException.NotFound e) {
+            throw new ResourceNotFoundException("User not found with keycard id " + keycardId);
+        } catch (Exception e) {
+            // Handle other exceptions
+            throw new GeneralException("An error occurred while processing the request.");
         }
     }
 

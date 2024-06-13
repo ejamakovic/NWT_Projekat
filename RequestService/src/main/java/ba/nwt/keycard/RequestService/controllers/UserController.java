@@ -2,6 +2,7 @@ package ba.nwt.keycard.RequestService.controllers;
 
 import java.util.List;
 
+import ba.nwt.keycard.RequestService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.RequestService.models.User.User;
 import ba.nwt.keycard.RequestService.models.User.UserDTO;
 import ba.nwt.keycard.RequestService.services.UserService;
@@ -84,6 +85,9 @@ public class UserController {
     @GetMapping("/getUserIdByCardId/{keycard_id}")
     public ResponseEntity<Long> getUserIdByCardId(@PathVariable("keycard_id") Long keycardId) {
         Long userId = userService.getUserIdByCardId(keycardId);
+        if (userId == null) {
+            throw new ResourceNotFoundException("User not found with keycard id " + keycardId);
+        }
         System.out.println(userId);
         return ResponseEntity.ok(userId);
     }
