@@ -134,34 +134,58 @@ public class RoomService {
         try {
             List<PermissionDTO> permissionDTOs = permissionServiceProxy.getKeycardPermissions(keycardId);
             System.out.println(permissionDTOs);
-            Long[] buildingIds = new Long[permissionDTOs.size()];
-            Long[] floorIds = new Long[permissionDTOs.size()];
-            Long[] roomIds = new Long[permissionDTOs.size()];
+            List<Long> buildingIds = new ArrayList<>();
+            List<Long> floorIds = new ArrayList<>();
+            List<Long> roomIds = new ArrayList<>();
 
-            for (int i = 0; i < permissionDTOs.size(); i++) {
-                PermissionDTO dto = permissionDTOs.get(i);
-                buildingIds[i] = dto.getBuildingId();
-                floorIds[i] = dto.getFloorId();
-                roomIds[i] = dto.getRoomId();
+            for (PermissionDTO dto : permissionDTOs) {
+                buildingIds.add(dto.getBuildingId());
+                floorIds.add(dto.getFloorId());
+                roomIds.add(dto.getRoomId());
             }
 
-            // Example usage
-            System.out.println(Arrays.toString(buildingIds));
-            System.out.println(Arrays.toString(floorIds));
-            System.out.println(Arrays.toString(roomIds));
             try {
-                List<FullRoomDTO> fullRoomDTOs = findCustomRoomsByBuildingFloorAndRoomIds(buildingIds, floorIds,
-                        roomIds);
-                System.out.println(fullRoomDTOs);
+                // get userIdByKeycardId
+                Long userId = requestServiceProxy.getUserIdByCardId(keycardId);
+                System.out.println("user" + userId);
+                // get all rooms that the user has grants to
 
-                return fullRoomDTOs;
-            } catch (Exception e) {
-                // Handle other exceptions
-                throw new GeneralException("An error occurred while fetching rooms.");
+                List<TempAccessGrantDTO> accessGrants = tempAccessGrantsService.getTempAccessGrantsByUserId(userId);
+
+                LocalDateTime timestamp = LocalDateTime.now();
+                for (TempAccessGrantDTO accessGrant : accessGrants) {
+                    if (accessGrant.getTimestamp().plusMinutes(30).isAfter(timestamp))
+                        roomIds.add(accessGrant.getRoomId());
+                }
+
+                try {
+                    // Example usage
+                    // convert to Long[]
+                    Long[] buildingIdsArr = buildingIds.toArray(new Long[0]);
+                    Long[] floorIdsArr = floorIds.toArray(new Long[0]);
+                    Long[] roomIdsArr = roomIds.toArray(new Long[0]);
+
+                    System.out.println(Arrays.toString(buildingIdsArr));
+                    System.out.println(Arrays.toString(floorIdsArr));
+                    System.out.println(Arrays.toString(roomIdsArr));
+                    List<FullRoomDTO> fullRoomDTOs = findCustomRoomsByBuildingFloorAndRoomIds(buildingIdsArr,
+                            floorIdsArr,
+                            roomIdsArr);
+
+                    System.out.println(fullRoomDTOs);
+
+                    return fullRoomDTOs;
+                } catch (Exception e) {
+                    // Handle other exceptions
+                    throw new GeneralException("An error occurred while fetching rooms.");
+                }
+
+            } catch (feign.FeignException.NotFound e) {
+                throw new ResourceNotFoundException("User not found with keycard id " + keycardId);
             }
 
         } catch (feign.FeignException.NotFound e) {
-            throw new ResourceNotFoundException("Keycard with id " + keycardId + " not found.");
+            throw new ResourceNotFoundException("User not found with keycard id " + keycardId);
         } catch (Exception e) {
             // Handle other exceptions
             throw new GeneralException("An error occurred while getting permissions.");
