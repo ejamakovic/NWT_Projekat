@@ -86,9 +86,48 @@ public class RoomService {
                 rs.getString("building_name")), params.toArray());
     }
 
-    public List<FullRoomDTO> getRoomsWithKeycard(Long keycardId) {
-        // ubaciti provjeru ako je validna kartica
+    public List<FullRoomDTO> findLockedRoomsByBuildingFloorAndRoomIds(Long buildingIds[], Long floorIds[],
+            Long roomIds[]) {
+        String sql = "SELECT " +
+                "r.id AS room_id, " +
+                "r.name AS room_name, " +
+                "f.id AS floor_id, " +
+                "f.floor_number AS floor_number, " +
+                "b.id AS building_id, " +
+                "b.name AS building_name " +
+                "FROM rooms r " +
+                "JOIN floors f ON r.floor_id = f.id " +
+                "JOIN buildings b ON f.building_id = b.id WHERE ";
 
+        List<String> conditions = new ArrayList<>();
+        List<Object> params = new ArrayList<>(); // Declare params variable here
+
+        // Assuming roomIds, floorIds, and buildingIds are defined somewhere above
+        if (roomIds.length > 0) {
+            conditions.add("r.id NOT IN (" + String.join(",", Collections.nCopies(roomIds.length, "?")) + ")");
+            Collections.addAll(params, roomIds);
+        }
+        if (floorIds.length > 0) {
+            conditions.add("f.id NOT IN (" + String.join(",", Collections.nCopies(floorIds.length, "?")) + ")");
+            Collections.addAll(params, floorIds);
+        }
+        if (buildingIds.length > 0) {
+            conditions.add("b.id NOT IN (" + String.join(",", Collections.nCopies(buildingIds.length, "?")) + ")");
+            Collections.addAll(params, buildingIds);
+        }
+
+        sql += String.join(" AND ", conditions);
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new FullRoomDTO(
+                rs.getLong("room_id"),
+                rs.getString("room_name"),
+                rs.getLong("floor_id"),
+                rs.getLong("building_id"),
+                rs.getInt("floor_number"),
+                rs.getString("building_name")), params.toArray());
+    }
+
+    public List<FullRoomDTO> getRoomsWithKeycard(Long keycardId) {
         try {
             List<PermissionDTO> permissionDTOs = permissionServiceProxy.getKeycardPermissions(keycardId);
             System.out.println(permissionDTOs);
@@ -109,6 +148,44 @@ public class RoomService {
             System.out.println(Arrays.toString(roomIds));
             try {
                 List<FullRoomDTO> fullRoomDTOs = findCustomRoomsByBuildingFloorAndRoomIds(buildingIds, floorIds,
+                        roomIds);
+                System.out.println(fullRoomDTOs);
+
+                return fullRoomDTOs;
+            } catch (Exception e) {
+                // Handle other exceptions
+                throw new GeneralException("An error occurred while fetching rooms.");
+            }
+
+        } catch (feign.FeignException.NotFound e) {
+            throw new ResourceNotFoundException("Keycard with id " + keycardId + " not found.");
+        } catch (Exception e) {
+            // Handle other exceptions
+            throw new GeneralException("An error occurred while getting permissions.");
+        }
+    }
+
+    public List<FullRoomDTO> getLockedRoomsWithKeycard(Long keycardId) {
+        try {
+            List<PermissionDTO> permissionDTOs = permissionServiceProxy.getKeycardPermissions(keycardId);
+            System.out.println(permissionDTOs);
+            Long[] buildingIds = new Long[permissionDTOs.size()];
+            Long[] floorIds = new Long[permissionDTOs.size()];
+            Long[] roomIds = new Long[permissionDTOs.size()];
+
+            for (int i = 0; i < permissionDTOs.size(); i++) {
+                PermissionDTO dto = permissionDTOs.get(i);
+                buildingIds[i] = dto.getBuildingId();
+                floorIds[i] = dto.getFloorId();
+                roomIds[i] = dto.getRoomId();
+            }
+
+            // Example usage
+            System.out.println(Arrays.toString(buildingIds));
+            System.out.println(Arrays.toString(floorIds));
+            System.out.println(Arrays.toString(roomIds));
+            try {
+                List<FullRoomDTO> fullRoomDTOs = findLockedRoomsByBuildingFloorAndRoomIds(buildingIds, floorIds,
                         roomIds);
                 System.out.println(fullRoomDTOs);
 
