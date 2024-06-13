@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ba.nwt.keycard.PermissionService.services.KeycardPermissionService;
+import ba.nwt.keycard.PermissionService.controllers.ErrorHandler.CustomExceptions.ResourceNotFoundException;
 import ba.nwt.keycard.PermissionService.models.KeycardPermission;
 
 import java.util.List;
@@ -34,6 +35,9 @@ public class KeycardPermissionController {
     @GetMapping("/keycard/{keycardId}")
     public ResponseEntity<List<?>> getAllPermissionsByKeycardId(@PathVariable("keycardId") Integer keycardId) {
         List<Permission> permissions = keycardPermissionService.getPermissionsByKeycardId(keycardId);
+        if (permissions.isEmpty()) {
+            throw new ResourceNotFoundException("No permissions found for keycard with id: " + keycardId);
+        }
         return ResponseEntity.ok().body(permissions);
     }
 

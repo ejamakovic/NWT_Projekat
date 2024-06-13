@@ -89,30 +89,41 @@ public class RoomService {
     public List<FullRoomDTO> getRoomsWithKeycard(Long keycardId) {
         // ubaciti provjeru ako je validna kartica
 
-        List<PermissionDTO> permissionDTOs = permissionServiceProxy.getKeycardPermissions(keycardId);
-        System.out.println(permissionDTOs);
+        try {
+            List<PermissionDTO> permissionDTOs = permissionServiceProxy.getKeycardPermissions(keycardId);
+            System.out.println(permissionDTOs);
+            Long[] buildingIds = new Long[permissionDTOs.size()];
+            Long[] floorIds = new Long[permissionDTOs.size()];
+            Long[] roomIds = new Long[permissionDTOs.size()];
 
-        Long[] buildingIds = new Long[permissionDTOs.size()];
-        Long[] floorIds = new Long[permissionDTOs.size()];
-        Long[] roomIds = new Long[permissionDTOs.size()];
+            for (int i = 0; i < permissionDTOs.size(); i++) {
+                PermissionDTO dto = permissionDTOs.get(i);
+                buildingIds[i] = dto.getBuildingId();
+                floorIds[i] = dto.getFloorId();
+                roomIds[i] = dto.getRoomId();
+            }
 
-        for (int i = 0; i < permissionDTOs.size(); i++) {
-            PermissionDTO dto = permissionDTOs.get(i);
-            buildingIds[i] = dto.getBuildingId();
-            floorIds[i] = dto.getFloorId();
-            roomIds[i] = dto.getRoomId();
+            // Example usage
+            System.out.println(Arrays.toString(buildingIds));
+            System.out.println(Arrays.toString(floorIds));
+            System.out.println(Arrays.toString(roomIds));
+            try {
+                List<FullRoomDTO> fullRoomDTOs = findCustomRoomsByBuildingFloorAndRoomIds(buildingIds, floorIds,
+                        roomIds);
+                System.out.println(fullRoomDTOs);
+
+                return fullRoomDTOs;
+            } catch (Exception e) {
+                // Handle other exceptions
+                throw new GeneralException("An error occurred while fetching rooms.");
+            }
+
+        } catch (feign.FeignException.NotFound e) {
+            throw new ResourceNotFoundException("Keycard with id " + keycardId + " not found.");
+        } catch (Exception e) {
+            // Handle other exceptions
+            throw new GeneralException("An error occurred while getting permissions.");
         }
-
-        // Example usage
-        System.out.println(Arrays.toString(buildingIds));
-        System.out.println(Arrays.toString(floorIds));
-        System.out.println(Arrays.toString(roomIds));
-
-        List<FullRoomDTO> fullRoomDTOs = findCustomRoomsByBuildingFloorAndRoomIds(buildingIds, floorIds,
-                roomIds);
-        System.out.println(fullRoomDTOs);
-
-        return fullRoomDTOs;
     }
 
     public LogDTO enterRoom(Long roomId, Long keycardId, String entryType) {
