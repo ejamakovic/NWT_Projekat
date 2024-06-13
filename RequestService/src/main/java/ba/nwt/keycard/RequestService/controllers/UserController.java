@@ -92,4 +92,13 @@ public class UserController {
         return ResponseEntity.ok(userId);
     }
 
+    @GetMapping("/getKeycardIdByUserId/{userId}")
+    public ResponseEntity<Long> getKeycardIdByUserId(@PathVariable("userId") Long userId) {
+        Long keycardId = userService.getKeycardIdByUserId(userId);
+        if (keycardId == null) {
+            throw new ResourceNotFoundException("Keycard not found for user id " + userId);
+        }
+        return ResponseEntity.ok(keycardId);
+    }
+
 }

@@ -90,4 +90,13 @@ public class UserService {
         Long userId = userRepository.getUserIdByCardId(keycardId);
         return userId;
     }
+
+    @Override
+    public Long getKeycardIdByUserId(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            return user.getKeycardId();
+        }
+        return null;
+    }
 }
