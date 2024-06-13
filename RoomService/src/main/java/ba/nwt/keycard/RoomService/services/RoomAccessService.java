@@ -1,30 +1,29 @@
 package ba.nwt.keycard.RoomService.services;
 
-import java.time.LocalDate;
-
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 
 import ba.nwt.keycard.RoomService.models.TempAccessGrant.TempAccessGrant;
 import ba.nwt.keycard.RoomService.models.TempAccessGrant.TempAccessGrantDTO;
 import ba.nwt.keycard.RoomService.repositories.TempAccessGrantsRepository;
-
-import ba.nwt.keycard.RoomService.models.TempAccessGrant.TempAccessGrantMapper;;
+import ba.nwt.keycard.RoomService.models.TempAccessGrant.TempAccessGrantMapper;
 
 @Service
 public class RoomAccessService {
 
-    @Autowired
-    private TempAccessGrantMapper tempAccessGrantMapper;
+    private final TempAccessGrantMapper tempAccessGrantMapper;
+    private final TempAccessGrantsRepository repository;
 
     @Autowired
-    private TempAccessGrantsRepository repository;
+    public RoomAccessService(TempAccessGrantMapper tempAccessGrantMapper, TempAccessGrantsRepository repository) {
+        this.tempAccessGrantMapper = tempAccessGrantMapper;
+        this.repository = repository;
+    }
 
     @RabbitListener(queues = "roomAccessQueue")
     public void receiveMessage(TempAccessGrantDTO accessGrantInput) {
-        TempAccessGrant grant = new TempAccessGrant();
-        grant = tempAccessGrantMapper.toEntity(accessGrantInput);
+        TempAccessGrant grant = tempAccessGrantMapper.toEntity(accessGrantInput);
         repository.save(grant);
     }
 }
