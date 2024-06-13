@@ -8,6 +8,7 @@ import ba.nwt.keycard.RequestService.models.User.UserMapper;
 import ba.nwt.keycard.RequestService.repositories.TeamRepository;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
 import ba.nwt.keycard.RequestService.models.User.User;
+import feign.FeignException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,17 +99,19 @@ public class UserService {
     @Transactional
     public User updateKeycard(Long userId, Long keycardId){
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        Optional<KeycardDTO> keycardDTOOptional = getKeycard(Math.toIntExact(keycardId));
-        if(keycardDTOOptional.isPresent()){
-            user.setKeycardId(keycardId);
-            return userRepository.save(user);
+        Optional<KeycardDTO> keycardDTOOptional = null;
+        try {
+            keycardDTOOptional = keycardClient.getKeycard(Math.toIntExact(keycardId));
+        } catch (FeignException.NotFound e) {
+            // Handle the case where the keycard does not exist
+            // You can log the error, return a default value, or throw a custom exception
+            System.out.println("Keycard not found with id: " + keycardId);
+            return null; // or throw new CustomKeycardNotFoundException("Keycard not found");
         }
-        else{
-            return null;
-        }
-    }
+        KeycardDTO keycardDTO = keycardDTOOptional.get();
+        System.out.println(keycardDTO);
+        user.setKeycardId(keycardId);
+        return userRepository.save(user);
 
-    public Optional<KeycardDTO> getKeycard(Integer keycardId) {
-        return keycardClient.getKeycard(keycardId);
     }
 }
