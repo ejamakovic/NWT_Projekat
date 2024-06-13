@@ -24,6 +24,8 @@ services:
       context: ./ConfigServer
       dockerfile: Dockerfile
     restart: on-failure
+    environment:
+      - config.server.git.password=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
     networks:
       - nwt_network
     ports:

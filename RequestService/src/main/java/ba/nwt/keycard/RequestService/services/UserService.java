@@ -46,7 +46,11 @@ public class UserService {
 
     public User getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        return user.orElse(null);
+        if(!user.isPresent())
+        {
+            throw new IllegalArgumentException("User not found");
+        }
+        return user.get();
     }
 
     public User createUser(UserDTO user) {
@@ -79,9 +83,9 @@ public class UserService {
 
     @Transactional
     public User updateTeamId(Long userId, Long teamId) {
-        User user = userRepository.findById(userId).orElse(null);
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         if (user != null) {
-            Team team = teamRepository.findById(teamId).orElse(null);
+            Team team = teamRepository.findById(teamId).orElseThrow(() -> new IllegalArgumentException("Team not found"));
             if (team != null) {
                 user.setTeam(team);
                 userRepository.save(user);

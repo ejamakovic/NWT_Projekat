@@ -27,6 +27,10 @@ public class TeamService {
 
     public Team getTeamById(Long id){
         Optional<Team> team = teamRepository.findById(id);
+        if(!team.isPresent())
+        {
+            throw new IllegalArgumentException("Team not found");
+        }
         return team.orElse(null);
     }
 
