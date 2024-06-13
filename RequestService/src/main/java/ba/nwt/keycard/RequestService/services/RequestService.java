@@ -66,7 +66,7 @@ public class RequestService {
             UserDTO userDTO = userMapper.toDTO(request.getUser());
             return new RequestResponseDTO(request.getId(), request.getStatus(), roomDTO, userDTO, teamDTO);
         }
-        return null;
+        throw new IllegalArgumentException("Request not found");
     }
 
     @Transactional

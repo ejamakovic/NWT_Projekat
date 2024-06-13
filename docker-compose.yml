@@ -24,8 +24,6 @@ services:
       context: ./ConfigServer
       dockerfile: Dockerfile
     restart: on-failure
-    environment:
-      #Treba ovdje token za config
     networks:
       - nwt_network
     ports:
