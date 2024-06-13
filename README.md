@@ -1,29 +1,40 @@
-# NWT_Projekat
-Key Card Management System
+# Key Card Management System
 
-# FRONTEND URL:
-https://github.com/mhadzic1/NWT-FE
+“Key Card Management System” obuhvata dizajniranje i implementaciju sistema za upravljanje i nadzor pristupa prostorijama putem kartica. Ciljana publika su firme sa jednim ili više odjela, tj. unutrašnjih grupa, pri čemu bi imali mogućnost kreiranja računa za role: administrator, menadžer i zaposlenik. Pri tome, administrator ima potpunu kontrolu i uvid u sistem, dok menadžeri nadgledaju i kontrolišu sistem samo za svoje skupine zaposlenika. 
 
-# Run debug mode -X
-mvn spring-boot:run -X
+## Članovi tima:
 
-# gRPC protoc download & path var setup:
-https://grpc.io/docs/protoc-installation/
+ - Mirza Hadžić
+ - Dženis Kajević
+ - Ermin Jamaković
 
-# gRPC class generation
-mvn compile -X
-This will generate Java classes in the target/generated-sources/protobuf directory.
+## Backend aplikacije
+Mikroservisi koji čine backend aplikacije:
+1. Config Server
+2. Eureka Service
+3. Api Gateway
+4. System Events
+5. Request Service
+6. Room Service
+7. Permission Service
 
-# gRPC client import fix: https://github.com/grpc/grpc-java/issues/5990#issuecomment-513208422
+## Frontend aplikacije
 
-# Delete / Clean the maven build
-mvn clean
+Link na repozitorij na frontend: https://github.com/mhadzic1/NWT-FE
 
-# Compile project to .jar
-mvn clean install -DskipTests
+## Pokretanje projekta
 
-# Docker build
+Potrebno je imati instaliran Docker Desktop. Prvo se treba kreirati mreža da kontejnere komandom:
+
+```
+docker create network nwt_network
+```
+
+Nakon ovoga, projekat se može pokrenuti sljedećom komandom:
+```
 docker-compose up --build
+```
 
-# RabbitMQ docker
-docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.13-management
+## Video demonstracija aplikacije
+
+Link na video: 
