@@ -34,6 +34,12 @@ Nakon ovoga, projekat se može pokrenuti sljedećom komandom:
 ```
 docker-compose up --build
 ```
+Ovo će raditi dok se ne ugasi hostana baza
+
+Za pokretanje svega lokalno potrebno je izvršiti sljedeću komandu
+```
+docker-compose -f docker-compose-local.yml up
+```
 
 ## Video demonstracija aplikacije
 
