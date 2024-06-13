@@ -17,7 +17,6 @@ import ba.nwt.keycard.RequestService.repositories.RequestRepository;
 import ba.nwt.keycard.RequestService.repositories.UserRepository;
 
 import jakarta.transaction.Transactional;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.Local;
@@ -44,15 +43,6 @@ public class RequestService {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-    @Value("${rabbitmq.exchange}")
-    private String exchange;
-
-    @Value("${rabbitmq.routingKey}")
-    private String routingKey;
 
     public List<RequestResponseDTO> getAllRequests() {
 
@@ -143,19 +133,10 @@ public class RequestService {
             System.out.println(newStatus);
             // ovdje treba zamijeniti rabbitmq (sendMessage) sa proxy da se salje poruka na
             // room service
-            sendMessage(request);
+            // sendMessage(request);
             return true;
         } else {
             return false;
         }
-    }
-
-    private void sendMessage(Request request) {
-        LocalDate timestamp = LocalDate.now();
-        TempAccessGrantDTO message = new TempAccessGrantDTO(request.getRoomId(), request.getUser().getId(),
-                timestamp);
-
-        // Send the message to the specified exchange with a routing key
-        rabbitTemplate.convertAndSend(exchange, routingKey, message);
     }
 }
