@@ -1,6 +1,7 @@
 package ba.nwt.keycard.RequestService.services;
 
-import ba.nwt.keycard.RequestService.clients.KeycardPermissionClient;
+import ba.nwt.keycard.RequestService.clients.KeycardClient;
+import ba.nwt.keycard.RequestService.models.KeycardDTO;
 import ba.nwt.keycard.RequestService.models.Team.Team;
 import ba.nwt.keycard.RequestService.models.User.UserDTO;
 import ba.nwt.keycard.RequestService.models.User.UserMapper;
@@ -25,6 +26,15 @@ public class UserService {
 
     @Autowired
     private TeamRepository teamRepository;
+
+
+    private final KeycardClient keycardClient;
+
+
+    @Autowired
+    public UserService(KeycardClient keycardClient) {
+        this.keycardClient = keycardClient;
+    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -55,19 +65,13 @@ public class UserService {
         return user.orElse(null);
     }
 
-    private final KeycardPermissionClient keycardPermissionClient;
-
-    @Autowired
-    public UserService(KeycardPermissionClient keycardPermissionClient) {
-        this.keycardPermissionClient = keycardPermissionClient;
-    }
 
     public List<?> getPermissionsByUserId(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         System.out.println(user);
         Integer keycardId = Math.toIntExact(user.getKeycardId());
 
-        return keycardPermissionClient.getAllPermissionsByKeycardId(keycardId);
+        return keycardClient.getAllPermissionsByKeycardId(keycardId);
     }
 
 
@@ -89,5 +93,22 @@ public class UserService {
     public Long getUserIdByCardId(Long keycardId) {
         Long userId = userRepository.getUserIdByCardId(keycardId);
         return userId;
+    }
+
+    @Transactional
+    public User updateKeycard(Long userId, Long keycardId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Optional<KeycardDTO> keycardDTOOptional = getKeycard(Math.toIntExact(keycardId));
+        if(keycardDTOOptional.isPresent()){
+            user.setKeycardId(keycardId);
+            return userRepository.save(user);
+        }
+        else{
+            return null;
+        }
+    }
+
+    public Optional<KeycardDTO> getKeycard(Integer keycardId) {
+        return keycardClient.getKeycard(keycardId);
     }
 }

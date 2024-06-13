@@ -2,6 +2,7 @@ package ba.nwt.keycard.PermissionService.services;
 
 import ba.nwt.keycard.PermissionService.models.Permission;
 import ba.nwt.keycard.PermissionService.repositories.PermissionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class PermissionService {
         return permissionRepository.findByBuildingId(buildingId);
     }
 
+    @Transactional
     public Permission createPermission(Permission permission) {
         return permissionRepository.save(permission);
     }

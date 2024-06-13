@@ -2,6 +2,7 @@ package ba.nwt.keycard.PermissionService.services;
 
 import ba.nwt.keycard.PermissionService.models.Keycard;
 import ba.nwt.keycard.PermissionService.repositories.KeycardRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class KeycardService {
         return keycardRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public void updateActiveStatus(Integer id, Boolean active) {
         Keycard keycard = keycardRepository.findById(id).orElse(null);
         if (keycard != null) {
@@ -35,10 +37,12 @@ public class KeycardService {
         }
     }
 
+    @Transactional
     public void deleteKeycard(Integer id) {
         keycardRepository.deleteById(id);
     }
 
+    @Transactional
     public Keycard createKeycard(Keycard keycard) {
         return keycardRepository.save(keycard);
     }

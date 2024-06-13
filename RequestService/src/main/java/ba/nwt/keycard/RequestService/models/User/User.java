@@ -1,6 +1,5 @@
 package ba.nwt.keycard.RequestService.models.User;
 
-import ba.nwt.keycard.RequestService.models.*;
 import ba.nwt.keycard.RequestService.models.Log.Log;
 import ba.nwt.keycard.RequestService.models.Notification.Notification;
 import ba.nwt.keycard.RequestService.models.Request.Request;
@@ -65,10 +64,11 @@ public class User implements UserInterface, UserDetails {
     @JsonIgnore
     private List<Notification> notifications;
 
-    @JoinColumn(name = "keycard_id")
+    @Column(name = "keycard_id", unique = true)
     private Long keycardId;
 
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "manager")
+    @JsonIgnore
     private List<Team> teams;
 
     @PreRemove

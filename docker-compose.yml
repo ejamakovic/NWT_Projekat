@@ -137,3 +137,23 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
+  frontend:
+    image: frontend:latest
+    container_name: frontend
+    build:
+      context: ./nwt-front/NWT-FE
+      dockerfile: Dockerfile
+    restart: on-failure
+    volumes:
+      - './nwt-front/nwt-election:/app'
+      - '/app/node_modules'
+    networks:
+      - nwt_network
+    expose:
+      - "3000"
+    ports:
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_BASE_URL=http://localhost:8080

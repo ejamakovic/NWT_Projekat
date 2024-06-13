@@ -92,4 +92,14 @@ public class UserController {
         return ResponseEntity.ok(userId);
     }
 
+    @PutMapping("/{userId}/keycard/{keycardId}")
+    public ResponseEntity<User> updateKeycardId(@PathVariable("userId") Long userId, @PathVariable("keycardId") Long keycardId){
+        User updatedUser = userService.updateKeycard(userId, keycardId);
+        if (updatedUser != null) {
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
