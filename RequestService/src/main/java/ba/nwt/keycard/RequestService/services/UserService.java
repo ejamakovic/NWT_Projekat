@@ -70,7 +70,7 @@ public class UserService {
     }
 
     public List<?> getPermissionsByUserId(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         System.out.println(user);
         Integer keycardId = Math.toIntExact(user.getKeycardId());
 
@@ -99,15 +99,12 @@ public class UserService {
 
     @Transactional
     public User updateKeycard(Long userId, Long keycardId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         Optional<KeycardDTO> keycardDTOOptional = null;
         try {
             keycardDTOOptional = keycardClient.getKeycard(Math.toIntExact(keycardId));
         } catch (FeignException.NotFound e) {
-            // Handle the case where the keycard does not exist
-            // You can log the error, return a default value, or throw a custom exception
-            System.out.println("Keycard not found with id: " + keycardId);
-            return null; // or throw new CustomKeycardNotFoundException("Keycard not found");
+            throw new IllegalArgumentException("Keycard not found with id: " + keycardId);
         }
         KeycardDTO keycardDTO = keycardDTOOptional.get();
         System.out.println(keycardDTO);
