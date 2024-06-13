@@ -1,6 +1,9 @@
 # NWT_Projekat
 Key Card Management System
 
+# FRONTEND URL:
+https://github.com/mhadzic1/NWT-FE
+
 # Run debug mode -X
 mvn spring-boot:run -X
 
