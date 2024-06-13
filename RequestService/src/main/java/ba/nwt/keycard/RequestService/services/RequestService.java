@@ -140,7 +140,7 @@ public class RequestService {
             Request request = requestOptional.get();
             request.setStatus(newStatus);
             requestRepository.save(request);
-
+            System.out.println(newStatus);
             // ovdje treba zamijeniti rabbitmq (sendMessage) sa proxy da se salje poruka na
             // room service
             sendMessage(request);

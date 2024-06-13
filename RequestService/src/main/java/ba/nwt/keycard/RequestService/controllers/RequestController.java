@@ -1,9 +1,6 @@
 package ba.nwt.keycard.RequestService.controllers;
 
-import ba.nwt.keycard.RequestService.models.Request.Request;
-import ba.nwt.keycard.RequestService.models.Request.RequestDTO;
-import ba.nwt.keycard.RequestService.models.Request.RequestResponseDTO;
-import ba.nwt.keycard.RequestService.models.Request.RequestStatus;
+import ba.nwt.keycard.RequestService.models.Request.*;
 import ba.nwt.keycard.RequestService.services.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,10 +49,9 @@ public class RequestController {
     @PutMapping("/status/{id}")
     public ResponseEntity<String> updateRequestStatus(@PathVariable Long id, @RequestBody RequestDTO requestDTO) {
         try {
-            RequestStatus newStatus = RequestStatus.valueOf(requestDTO.getStatus().toUpperCase());
-            boolean updated = requestService.updateRequestStatus(id, newStatus);
+            boolean updated = requestService.updateRequestStatus(id, requestDTO.getStatus());
             if (updated) {
-                return ResponseEntity.ok("Request with id " + id + " has been updated successfully to status: " + newStatus + ".");
+                return ResponseEntity.ok("Request with id " + id + " has been updated successfully to status: " + requestDTO.getStatus() + ".");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found with id: " + id);
             }
