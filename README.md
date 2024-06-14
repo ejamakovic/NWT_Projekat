@@ -20,11 +20,13 @@ Mikroservisi koji čine backend aplikacije:
 
 ## Frontend aplikacije
 
-Link na repozitorij na frontend: https://github.com/mhadzic1/NWT-FE
+Link na repozitorij na frontend: https://github.com/mhadzic1/NWT-FE.
+
+Potrebno isti skinuti i postaviti u isti folder zajedno sa backend-om aplikacije.
 
 ## Pokretanje projekta
 
-Potrebno je imati instaliran Docker Desktop. Prvo se treba kreirati mreža da kontejnere komandom:
+Potrebno je imati instaliran Docker Desktop. Prvo se treba kreirati mreža za kontejnere komandom:
 
 ```
 docker create network nwt_network
@@ -43,4 +45,4 @@ docker-compose -f docker-compose-local.yml up
 
 ## Video demonstracija aplikacije
 
-Link na video: 
+Link na video: https://youtu.be/sVxCvKuR13o.
